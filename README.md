@@ -12,13 +12,6 @@ define one of the following preprocessor flags to control the implementation:
   This works on both Mac OSX and iOS.
 * `GUID_WINDOWS` - Uses the built in `CoCreateGuid` function in Windows.
 
-## Building
-
-Each platform has its own build script to create object files and run unit
-tests, but the source files (the only ones you need are `guid.h` and
-`guid.cpp`) are meant to be incorporated into your own build system. You can
-look at the platform build script (eg: `linux.sh` as a reference).
-
 ## Linux
 
 **The Linux version uses the proprocessor flag `GUID_LIBUUID`**
