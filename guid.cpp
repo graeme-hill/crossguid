@@ -5,7 +5,7 @@
 #endif
 
 #ifdef GUID_CFUUID
-#include "CFUUID.h"
+#include <CoreFoundation/CFUUID.h>
 #endif
 
 #ifdef GUID_WINDOWS
@@ -126,29 +126,33 @@ Guid generateGuid()
 
 // this is the mac and ios version 
 #ifdef GUID_CFUUID
+struct __CFUUID;
+
 Guid generateGuid()
 {
-  CFUUIDRef id = CFUUIDCreate(NULL);
-  const unsigned char *bytes =
+  auto id = CFUUIDCreate(NULL);
+  auto bytes = CFUUIDGetUUIDBytes(id);
+    
+  const unsigned char byteArray[16] =
   {
-    id.bytes.byte0,
-    id.bytes.byte1,
-    id.bytes.byte2,
-    id.bytes.byte3,
-    id.bytes.byte4,
-    id.bytes.byte5,
-    id.bytes.byte6,
-    id.bytes.byte7,
-    id.bytes.byte8,
-    id.bytes.byte9,
-    id.bytes.byte10,
-    id.bytes.byte11,
-    id.bytes.byte12,
-    id.bytes.byte13,
-    id.bytes.byte14,
-    id.bytes.byte15
+    bytes.byte0,
+    bytes.byte1,
+    bytes.byte2,
+    bytes.byte3,
+    bytes.byte4,
+    bytes.byte5,
+    bytes.byte6,
+    bytes.byte7,
+    bytes.byte8,
+    bytes.byte9,
+    bytes.byte10,
+    bytes.byte11,
+    bytes.byte12,
+    bytes.byte13,
+    bytes.byte14,
+    bytes.byte15
   };
-  return bytes;
+  return byteArray;
 }
 #endif
 
