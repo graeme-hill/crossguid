@@ -126,8 +126,6 @@ Guid generateGuid()
 
 // this is the mac and ios version 
 #ifdef GUID_CFUUID
-struct __CFUUID;
-
 Guid generateGuid()
 {
   auto id = CFUUIDCreate(NULL);
@@ -156,6 +154,7 @@ Guid generateGuid()
 }
 #endif
 
+// obviously this is the windows version
 #ifdef GUID_WINDOWS
 Guid generateGuid()
 {
