@@ -1,5 +1,13 @@
 #include "guid.h"
 
+#ifdef GUID_LIBUUID
+#include <uuid/uuid.h>
+#endif
+
+#ifdef GUID_WINDOWS
+#include <objbase.h>
+#endif
+
 using namespace std;
 
 // overload << so that it's easy to convert to a string
@@ -107,5 +115,38 @@ Guid generateGuid()
   uuid_t id;
   uuid_generate(id);
   return id;
+}
+#endif
+
+#ifdef GUID_WINDOWS
+Guid generateGuid()
+{
+	GUID newId;
+	CoCreateGuid(&newId);
+
+	const unsigned char bytes[16] = 
+	{
+		(newId.Data1 >> 24) & 0xff,
+		(newId.Data1 >> 16) & 0xff,
+		(newId.Data1 >> 8) & 0xff,
+		(newId.Data1) & 0xff,
+
+		(newId.Data2 >> 8) & 0xff,
+		(newId.Data2) & 0xff,
+
+		(newId.Data3 >> 8) & 0xff,
+		(newId.Data3) & 0xff,
+
+		newId.Data4[0],
+		newId.Data4[1],
+		newId.Data4[2],
+		newId.Data4[3],
+		newId.Data4[4],
+		newId.Data4[5],
+		newId.Data4[6],
+		newId.Data4[7]
+	};
+
+	return bytes;
 }
 #endif
