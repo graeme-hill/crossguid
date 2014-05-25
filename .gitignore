@@ -4,3 +4,7 @@
 *.dll
 *.DLL
 test
+VisualStudio/Debug/
+VisualStudio/Release/
+*.sdf
+*.suo

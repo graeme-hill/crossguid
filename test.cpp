@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
   auto r2 = generateGuid();
   auto r3 = generateGuid();
 
+  cout << r1 << endl << r2 << endl << r3 << endl;
+
   Guid s1("7bcd757f-5b10-4f9b-af69-1a1f226f3b3e");
   Guid s2("16d1bd03-09a5-47d3-944b-5e326fd52d27");
   Guid s3("fdaba646-e07e-49de-9529-4499a5580c75");
