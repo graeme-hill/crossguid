@@ -1,8 +1,16 @@
 # CrossGuid
 
-CrossGuid is a minimal, cross platform, C++ implementation. It uses the best
+CrossGuid is a minimal, cross platform, C++ GUID library. It uses the best
 native GUID/UUID generator on the given platform and had a generic class for
-parsing, stringifying, and comparing IDs.
+parsing, stringifying, and comparing IDs. The intention is that anyone who
+uses this code can simply copy `guid.h` and `guid.cpp` into their project and
+define one of the following preprocessor flags to control the implementation:
+
+* `GUID_LIBUUID` - Uses `libuuid` which is normally used on linux but possibly
+  usable elsewhere as well.
+* `GUID_CFUUID` - Uses `CFCreateUUID` from Apple's `CoreFoundation` framework.
+  This works on both Mac OSX and iOS.
+* `GUID_WINDOWS` - Uses the built in `CoCreateGuid` function in Windows.
 
 ## Building
 
