@@ -14,7 +14,7 @@ define one of the following preprocessor flags to control the implementation:
 
 I recommend taking the time to actually look at the `guid.h` and `guid.cpp` so
 that you can see how simple they are. It should be pretty trivial to modify
-code to match your naming conventions or drop it into a namespace so that it
+the code to match your naming conventions or drop it into a namespace so that it
 fits in nicely with your code base.
 
 ## Linux
