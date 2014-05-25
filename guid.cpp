@@ -1,5 +1,9 @@
 #include "guid.h"
 
+#ifdef GUID_CFUUID
+#include "CFUUID.h"
+#endif
+
 using namespace std;
 
 // overload << so that it's easy to convert to a string
@@ -101,11 +105,41 @@ bool Guid::operator!=(const Guid &other) const
   return !((*this) == other);
 }
 
+// This is the linux friendly implementation, but it coul work on other
+// systems that have libuuid available
 #ifdef GUID_LIBUUID
 Guid generateGuid()
 {
   uuid_t id;
   uuid_generate(id);
   return id;
+}
+#endif
+
+// this is the mac and ios version 
+#ifdef GUID_CFUUID
+Guid generateGuid()
+{
+  CFUUIDRef id = CFUUIDCreate(NULL);
+  const unsigned char *bytes =
+  {
+    id.bytes.byte0,
+    id.bytes.byte1,
+    id.bytes.byte2,
+    id.bytes.byte3,
+    id.bytes.byte4,
+    id.bytes.byte5,
+    id.bytes.byte6,
+    id.bytes.byte7,
+    id.bytes.byte8,
+    id.bytes.byte9,
+    id.bytes.byte10,
+    id.bytes.byte11,
+    id.bytes.byte12,
+    id.bytes.byte13,
+    id.bytes.byte14,
+    id.bytes.byte15
+  };
+  return bytes;
 }
 #endif
