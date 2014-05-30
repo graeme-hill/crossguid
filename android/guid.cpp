@@ -76,33 +76,12 @@ Guid::Guid(const unsigned char *bytes)
   _bytes.assign(bytes, bytes + 16);
 }
 
-// converts a since hex char to a number (0 - 15)
-unsigned char hexDigitToChar(char ch)
-{
-  if (ch > 47 && ch < 58)
-    return ch - 48;
-
-  if (ch > 96 && ch < 103)
-    return ch - 87;
-
-  if (ch > 64 && ch < 71)
-    return ch - 55;
-
-  return 0;
-}
-
-// converts the two hexadecimal characters to an unsigned char (a byte)
-unsigned char hexPairToChar(char a, char b)
-{
-  return hexDigitToChar(a) * 16 + hexDigitToChar(b);
-}
-
 // create a guid from string
 Guid::Guid(const string &fromString)
 {
   _bytes.clear();
+  char byteHexString[3] = {0};
 
-  char charOne, charTwo;
   bool lookingForFirstChar = true;
 
   for (const char &ch : fromString)
@@ -112,13 +91,14 @@ Guid::Guid(const string &fromString)
 
     if (lookingForFirstChar)
     {
-      charOne = ch;
+      byteHexString[0] = ch;
       lookingForFirstChar = false;
     }
     else
     {
-      charTwo = ch;
-      auto byte = hexPairToChar(charOne, charTwo);
+      byteHexString[1] = ch;
+      unsigned long byte;
+      byte = stoul(byteHexString, 0, 16);
       _bytes.push_back(byte);
       lookingForFirstChar = true;
     }
@@ -231,4 +211,3 @@ Guid generateGuid()
   return bytes;
 }
 #endif
-
