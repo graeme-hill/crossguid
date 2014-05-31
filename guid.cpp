@@ -174,10 +174,11 @@ Guid GuidGenerator::newGuid()
 
 // this is the mac and ios version 
 #ifdef GUID_CFUUID
-Guid generateGuid(void *context = NULL)
+Guid GuidGenerator::newGuid()
 {
-  auto id = CFUUIDCreate(NULL);
-  auto bytes = CFUUIDGetUUIDBytes(id);
+  auto newId = CFUUIDCreate(NULL);
+  auto bytes = CFUUIDGetUUIDBytes(newId);
+  CFRelease(newId);
 
   const unsigned char byteArray[16] =
   {
