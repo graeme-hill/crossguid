@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pushd android/TestApp
+pushd android
 ndk-build clean || { exit 1; }
 ndk-build || { exit 1; }
 ant debug || { exit 1; }

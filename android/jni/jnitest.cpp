@@ -2,8 +2,8 @@
 #include <sstream>
 #include <jni.h>
 #include <iostream>
-#include "../../../test.h"
-#include "../../../guid.h"
+#include "../../test.h"
+#include "../../guid.h"
 
 extern "C" 
 {
