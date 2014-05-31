@@ -36,6 +36,10 @@ THE SOFTWARE.
 #include <objbase.h>
 #endif
 
+#ifdef GUID_ANDROID
+#include <jni.h>
+#endif
+
 using namespace std;
 
 // overload << so that it's easy to convert to a string
@@ -160,7 +164,7 @@ bool Guid::operator!=(const Guid &other) const
 // This is the linux friendly implementation, but it coul work on other
 // systems that have libuuid available
 #ifdef GUID_LIBUUID
-Guid generateGuid()
+Guid GuidGenerator::newGuid()
 {
   uuid_t id;
   uuid_generate(id);
@@ -170,7 +174,7 @@ Guid generateGuid()
 
 // this is the mac and ios version 
 #ifdef GUID_CFUUID
-Guid generateGuid()
+Guid generateGuid(void *context = NULL)
 {
   auto id = CFUUIDCreate(NULL);
   auto bytes = CFUUIDGetUUIDBytes(id);
@@ -200,7 +204,7 @@ Guid generateGuid()
 
 // obviously this is the windows version
 #ifdef GUID_WINDOWS
-Guid generateGuid()
+Guid GuidGenerator::newGuid()
 {
   GUID newId;
   CoCreateGuid(&newId);
@@ -232,3 +236,43 @@ Guid generateGuid()
 }
 #endif
 
+// android version that uses a call to a java api
+#ifdef GUID_ANDROID
+GuidGenerator::GuidGenerator(JNIEnv *env)
+{
+  _env = env;
+  _activityClass = env->FindClass("ca/graemehill/crossguid/testapp/MainActivity");
+  _uuidClass = env->FindClass("java/util/UUID");
+  _newGuidMethod = env->GetStaticMethodID(_activityClass, "newGuid", "()Ljava/util/UUID;");
+  _mostSignificantBitsMethod = env->GetMethodID(_uuidClass, "getMostSignificantBits", "()J");
+  _leastSignificantBitsMethod = env->GetMethodID(_uuidClass, "getLeastSignificantBits", "()J");
+}
+
+Guid GuidGenerator::newGuid()
+{
+  jobject javaUuid = _env->CallStaticObjectMethod(_activityClass, _newGuidMethod);
+  jlong mostSignificant = _env->CallLongMethod(javaUuid, _mostSignificantBitsMethod);
+  jlong leastSignificant = _env->CallLongMethod(javaUuid, _leastSignificantBitsMethod);
+
+  unsigned char bytes[16] = 
+  {
+    (mostSignificant >> 56) & 0xFF,
+    (mostSignificant >> 48) & 0xFF,
+    (mostSignificant >> 40) & 0xFF,
+    (mostSignificant >> 32) & 0xFF,
+    (mostSignificant >> 24) & 0xFF,
+    (mostSignificant >> 16) & 0xFF,
+    (mostSignificant >> 8) & 0xFF,
+    (mostSignificant) & 0xFF,
+    (leastSignificant >> 56) & 0xFF,
+    (leastSignificant >> 48) & 0xFF,
+    (leastSignificant >> 40) & 0xFF,
+    (leastSignificant >> 32) & 0xFF,
+    (leastSignificant >> 24) & 0xFF,
+    (leastSignificant >> 16) & 0xFF,
+    (leastSignificant >> 8) & 0xFF,
+    (leastSignificant) & 0xFF,
+  };
+  return bytes;
+}
+#endif
