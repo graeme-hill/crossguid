@@ -18,10 +18,6 @@ public class MainActivity extends Activity {
 
     public native String test();
 
-    public static UUID newGuid() {
-        return UUID.randomUUID();
-    }
-
     static {
         System.loadLibrary("crossguidtest");
     }
