@@ -45,7 +45,7 @@ platform except Android, you can create a guid generator like this:
 
 But on Android you need to pass a `JNIEnv *`:
 
-    Guid Generator generator(env);
+    GuidGenerator generator(env);
 
 ### Creating guids
 
