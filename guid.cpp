@@ -242,16 +242,15 @@ Guid GuidGenerator::newGuid()
 GuidGenerator::GuidGenerator(JNIEnv *env)
 {
   _env = env;
-  _activityClass = env->FindClass("ca/graemehill/crossguid/testapp/MainActivity");
   _uuidClass = env->FindClass("java/util/UUID");
-  _newGuidMethod = env->GetStaticMethodID(_activityClass, "newGuid", "()Ljava/util/UUID;");
+  _newGuidMethod = env->GetStaticMethodID(_uuidClass, "randomUUID", "()Ljava/util/UUID;");
   _mostSignificantBitsMethod = env->GetMethodID(_uuidClass, "getMostSignificantBits", "()J");
   _leastSignificantBitsMethod = env->GetMethodID(_uuidClass, "getLeastSignificantBits", "()J");
 }
 
 Guid GuidGenerator::newGuid()
 {
-  jobject javaUuid = _env->CallStaticObjectMethod(_activityClass, _newGuidMethod);
+  jobject javaUuid = _env->CallStaticObjectMethod(_uuidClass, _newGuidMethod);
   jlong mostSignificant = _env->CallLongMethod(javaUuid, _mostSignificantBitsMethod);
   jlong leastSignificant = _env->CallLongMethod(javaUuid, _leastSignificantBitsMethod);
 

@@ -96,7 +96,6 @@ class GuidGenerator
 #ifdef GUID_ANDROID
   private:
     JNIEnv *_env;
-    jclass _activityClass;
     jclass _uuidClass;
     jmethodID _newGuidMethod;
     jmethodID _mostSignificantBitsMethod;
