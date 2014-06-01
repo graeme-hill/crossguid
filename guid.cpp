@@ -212,16 +212,16 @@ Guid GuidGenerator::newGuid()
 
   const unsigned char bytes[16] = 
   {
-    (newId.Data1 >> 24) & 0xff,
-    (newId.Data1 >> 16) & 0xff,
-    (newId.Data1 >> 8) & 0xff,
+    (newId.Data1 >> 24) & 0xFF,
+    (newId.Data1 >> 16) & 0xFF,
+    (newId.Data1 >> 8) & 0xFF,
     (newId.Data1) & 0xff,
 
-    (newId.Data2 >> 8) & 0xff,
+    (newId.Data2 >> 8) & 0xFF,
     (newId.Data2) & 0xff,
 
-    (newId.Data3 >> 8) & 0xff,
-    (newId.Data3) & 0xff,
+    (newId.Data3 >> 8) & 0xFF,
+    (newId.Data3) & 0xFF,
 
     newId.Data4[0],
     newId.Data4[1],

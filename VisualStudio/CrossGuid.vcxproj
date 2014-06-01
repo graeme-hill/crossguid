@@ -80,10 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\guid.h" />
+    <ClInclude Include="..\test.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\guid.cpp" />
     <ClCompile Include="..\test.cpp" />
+    <ClCompile Include="..\testmain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
