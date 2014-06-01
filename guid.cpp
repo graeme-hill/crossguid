@@ -80,7 +80,7 @@ Guid::Guid(const unsigned char *bytes)
   _bytes.assign(bytes, bytes + 16);
 }
 
-// converts a since hex char to a number (0 - 15)
+// converts a single hex char to a number (0 - 15)
 unsigned char hexDigitToChar(char ch)
 {
   if (ch > 47 && ch < 58)
