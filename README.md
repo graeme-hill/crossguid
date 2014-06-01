@@ -20,6 +20,17 @@ fits in nicely with your code base.
 
 ## Basic usage
 
+### Tests
+
+The tests are a simple way to figure out how the library works. There is a file
+in the root of the repository called `test.cpp` that runs a simple set of tests
+and outputs a few guid strings for a sanity check. This file does not have a
+`main()` function entry point there, it is intended to be called from somewhere
+else, and it takes a `GuidGenerator` as input. All platforms except for Android
+use `testmain.cpp` to construct a `GuidGenerator` and run the tests. In Android
+there is a special file called `android/jni/jnitest.cpp` which invokes the
+tests.
+
 ### Creating a guid generator
 
 Creation of a guid generator is not exactly the same in every platform, but
