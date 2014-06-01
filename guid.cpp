@@ -161,7 +161,7 @@ bool Guid::operator!=(const Guid &other) const
   return !((*this) == other);
 }
 
-// This is the linux friendly implementation, but it coul work on other
+// This is the linux friendly implementation, but it could work on other
 // systems that have libuuid available
 #ifdef GUID_LIBUUID
 Guid GuidGenerator::newGuid()
