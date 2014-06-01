@@ -4,6 +4,7 @@
 *.dll
 *.DLL
 test
+testmain
 VisualStudio/Debug/
 VisualStudio/Release/
 *.sdf
