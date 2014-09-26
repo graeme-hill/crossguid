@@ -34,8 +34,6 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
-using namespace std;
-
 // Class to represent a GUID/UUID. Each instance acts as a wrapper around a
 // 16 byte value that can be passed around by value. It also supports
 // conversion to string (via the stream operator <<) and conversion from a
@@ -45,13 +43,13 @@ class Guid
   public:
 
     // create a guid from vector of bytes
-    Guid(const vector<unsigned char> &bytes);
+    Guid(const std::vector<unsigned char> &bytes);
 
     // create a guid from array of bytes
     Guid(const unsigned char *bytes);
 
     // create a guid from string
-    Guid(const string &fromString);
+    Guid(const std::string &fromString);
 
     // create empty guid
     Guid();
@@ -69,10 +67,10 @@ class Guid
   private:
 
     // actual data
-    vector<unsigned char> _bytes;
+    std::vector<unsigned char> _bytes;
 
     // make the << operator a friend so it can access _bytes
-    friend ostream &operator<<(ostream &s, const Guid &guid);
+    friend std::ostream &operator<<(std::ostream &s, const Guid &guid);
 };
 
 // Class that can create new guids. The only reason this exists instead of
