@@ -5,6 +5,7 @@
 *.DLL
 test
 testmain
+VisualStudio/*.user
 VisualStudio/Debug/
 VisualStudio/Release/
 *.opensdf
