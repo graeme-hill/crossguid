@@ -24,10 +24,12 @@ THE SOFTWARE.
 
 #pragma once
 
+#include <functional>
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <iomanip>
 
 #ifdef GUID_ANDROID
@@ -63,6 +65,13 @@ class Guid
     // overload equality and inequality operator
     bool operator==(const Guid &other) const;
     bool operator!=(const Guid &other) const;
+
+    std::string str() const;
+    const char* c_str() const;
+
+    operator std::string() const;
+
+    void swap(Guid& other) noexcept;
 
   private:
 
@@ -100,3 +109,30 @@ class GuidGenerator
     jmethodID _leastSignificantBitsMethod;
 #endif
 };
+
+namespace std
+{
+
+  // Template specialization for std::swap<Guid>() --
+  // See guid.cpp for the function definition
+  template <>
+  void swap(Guid &guid0, Guid &guid1);
+
+  // Specialization for std::hash<Guid> -- this implementation
+  // uses std::hash<std::string> on the stringification of the guid
+  // to calculate the hash
+  template <>
+  struct hash<Guid>
+  {
+
+    typedef Guid argument_type;
+    typedef std::size_t result_type;
+
+    result_type operator()(argument_type const &guid) const
+    {
+      std::hash<std::string> hasher;
+      return static_cast<result_type>(hasher(guid.str()));
+    }
+  };
+
+}; /* namespace std */
