@@ -1,6 +1,8 @@
 PREFIX = /usr
 LIBPATH = /lib
 CXX = g++
+AR = ar
+RANLIB = ranlib
 CXXFLAGS = -std=c++11 -Wall -DGUID_LIBUUID -fPIC
 
 INSTALL = install
@@ -27,8 +29,8 @@ libcrossguid.so: guid.o
 	$(CXX) -shared -o $@ $<
 
 libcrossguid.a: guid.o
-	ar rc $@ $^
-	ranlib $@
+	$(AR) rc $@ $^
+	$(RANLIB) $@
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
