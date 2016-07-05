@@ -77,7 +77,7 @@ Or to store a guid in a `std::string`:
     void doGuidStuff(GuidGenerator generator)
     {
         auto myGuid = generator.newGuid();
-        std::stringstring stream;
+        std::stringstream stream;
         stream << myGuid;
         auto guidString = stream.str();
     }
