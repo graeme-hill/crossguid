@@ -41,20 +41,26 @@ different depending on the platform, but client code can pass around a
 `GuidGenerator` object and then use it the same on every platform. On every
 platform except Android, you can create a guid generator like this:
 
-    GuidGenerator generator;
+```cpp
+GuidGenerator generator;
+```
 
 But on Android you need to pass a `JNIEnv *`:
 
-    GuidGenerator generator(env);
+```cpp
+GuidGenerator generator(env);
+```
 
 ### Creating guids
 
 On every platform guid creation is the same:
 
-    void doGuidStuff(GuidGenerator generator)
-    {
-        auto myGuid = generator.newGuid();
-    }
+```cpp
+void doGuidStuff(GuidGenerator generator)
+{
+    auto myGuid = generator.newGuid();
+}
+```
 
 ### Converting guid to string
 
@@ -65,32 +71,38 @@ computations. If you do need to convert a guid to a string, then you can
 utilize strings because the `<<` operator is overloaded. To print a guid to
 `std::cout`:
 
-    
-    void doGuidStuff(GuidGenerator generator)
-    {
-        auto myGuid = generator.newGuid();
-        std::cout << "Here is a guid: " << myGuid << std::endl;
-    }
+
+```cpp
+void doGuidStuff(GuidGenerator generator)
+{
+    auto myGuid = generator.newGuid();
+    std::cout << "Here is a guid: " << myGuid << std::endl;
+}
+```
 
 Or to store a guid in a `std::string`:
 
-    void doGuidStuff(GuidGenerator generator)
-    {
-        auto myGuid = generator.newGuid();
-        std::stringstream stream;
-        stream << myGuid;
-        auto guidString = stream.str();
-    }
+```cpp
+void doGuidStuff(GuidGenerator generator)
+{
+    auto myGuid = generator.newGuid();
+    std::stringstream stream;
+    stream << myGuid;
+    auto guidString = stream.str();
+}
+```
 
 ### Parsing a string into a guid
 
 There is a constructor that can be used to create a guid from a string without
 needing any reference to a `GuidGenerator`:
 
-    void doGuidStuff()
-    {
-        Guid guid("e63e03a8-f3e5-4e0f-99bb-a3fc402d4fc8");
-    }
+```cpp
+void doGuidStuff()
+{
+    Guid guid("e63e03a8-f3e5-4e0f-99bb-a3fc402d4fc8");
+}
+```
 
 ### Creating a guid from raw bytes
 
@@ -98,11 +110,15 @@ It's unlikely that you will need this, but this is done within the library
 internally to construct a `Guid` object from the raw data given by the system's
 built-in guid generation function. There are two key constructors for this:
 
-    Guid(const vector<unsigned char> &bytes);
+```cpp
+Guid(const vector<unsigned char> &bytes);
+```
 
 and
 
-    Guid(const unsigned char *bytes);
+```cpp
+Guid(const unsigned char *bytes);
+```
 
 In both cases the constructor expects to receive exactly 16 bytes.
 
@@ -110,14 +126,16 @@ In both cases the constructor expects to receive exactly 16 bytes.
 
 `==` and `!=` are implemented, so the following works as expected:
 
-    void doGuidStuff(GuidGenerator generator)
-    {
-        auto guid1 = generator.newGuid();
-        auto guid2 = generator.newGuid();
-        
-        auto guidsAreEqual = guid1 == guid2;
-        auto guidsAreNotEqual = guid1 != guid2;
-    }
+```cpp
+void doGuidStuff(GuidGenerator generator)
+{
+    auto guid1 = generator.newGuid();
+    auto guid2 = generator.newGuid();
+
+    auto guidsAreEqual = guid1 == guid2;
+    auto guidsAreNotEqual = guid1 != guid2;
+}
+```
 
 ## Linux
 
