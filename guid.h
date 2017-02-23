@@ -89,7 +89,7 @@ class GuidGenerator
     GuidGenerator() { }
 #endif
 
-    Guid newGuid();
+    virtual Guid newGuid();
 
 #ifdef GUID_ANDROID
   private:
