@@ -3,5 +3,5 @@
 
 int main()
 {
-  return test(GuidGenerator(), std::cout);
+  return test(std::cout);
 }

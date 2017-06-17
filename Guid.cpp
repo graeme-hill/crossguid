@@ -43,6 +43,24 @@ THE SOFTWARE.
 
 using namespace std;
 
+BEGIN_XG_NAMESPACE
+
+#ifdef GUID_ANDROID
+AndroidGuidInfo androidInfo;
+
+void initJni(JNIEnv *env)
+{
+	androidInfo =
+	{
+		env,
+		env->FindClass("java/util/UUID"),
+		env->GetStaticMethodID(_uuidClass, "randomUUID", "()Ljava/util/UUID;"),
+		env->GetMethodID(_uuidClass, "getMostSignificantBits", "()J");
+		env->GetMethodID(_uuidClass, "getLeastSignificantBits", "()J");
+	};
+}
+#endif
+
 // overload << so that it's easy to convert to a string
 ostream &operator<<(ostream &s, const Guid &guid)
 {
@@ -208,7 +226,7 @@ void Guid::swap(Guid& other) noexcept
 // This is the linux friendly implementation, but it could work on other
 // systems that have libuuid available
 #ifdef GUID_LIBUUID
-Guid GuidGenerator::newGuid()
+Guid newGuid()
 {
 	uuid_t id;
 	uuid_generate(id);
@@ -218,7 +236,7 @@ Guid GuidGenerator::newGuid()
 
 // this is the mac and ios version
 #ifdef GUID_CFUUID
-Guid GuidGenerator::newGuid()
+Guid newGuid()
 {
 	auto newId = CFUUIDCreate(NULL);
 	auto bytes = CFUUIDGetUUIDBytes(newId);
@@ -249,7 +267,7 @@ Guid GuidGenerator::newGuid()
 
 // obviously this is the windows version
 #ifdef GUID_WINDOWS
-Guid GuidGenerator::newGuid()
+Guid newGuid()
 {
 	GUID newId;
 	CoCreateGuid(&newId);
@@ -283,26 +301,14 @@ Guid GuidGenerator::newGuid()
 
 // android version that uses a call to a java api
 #ifdef GUID_ANDROID
-GuidGenerator::GuidGenerator(JNIEnv *env)
+Guid newGuid()
 {
-	_env = env;
-	_uuidClass = env->FindClass("java/util/UUID");
-	_newGuidMethod = env->GetStaticMethodID(
-		_uuidClass, "randomUUID", "()Ljava/util/UUID;");
-	_mostSignificantBitsMethod = env->GetMethodID(
-		_uuidClass, "getMostSignificantBits", "()J");
-	_leastSignificantBitsMethod = env->GetMethodID(
-		_uuidClass, "getLeastSignificantBits", "()J");
-}
-
-Guid GuidGenerator::newGuid()
-{
-	jobject javaUuid = _env->CallStaticObjectMethod(
-		_uuidClass, _newGuidMethod);
-	jlong mostSignificant = _env->CallLongMethod(javaUuid,
-		_mostSignificantBitsMethod);
-	jlong leastSignificant = _env->CallLongMethod(javaUuid,
-		_leastSignificantBitsMethod);
+	jobject javaUuid = androidInfo.env->CallStaticObjectMethod(
+		androidInfo.uuidClass, androidInfo.newGuidMethod);
+	jlong mostSignificant = androidInfo.env->CallLongMethod(javaUuid,
+		androidInfo.mostSignificantBitsMethod);
+	jlong leastSignificant = androidInfo.env->CallLongMethod(javaUuid,
+		androidInfo.leastSignificantBitsMethod);
 
 	unsigned char bytes[16] =
 	{
@@ -327,12 +333,14 @@ Guid GuidGenerator::newGuid()
 }
 #endif
 
+END_XG_NAMESPACE
+
 // Specialization for std::swap<Guid>() --
 // call member swap function of lhs, passing rhs
 namespace std
 {
 	template <>
-	void swap(Guid& lhs, Guid& rhs)
+	void swap(xg::Guid& lhs, xg::Guid& rhs)
 	{
 		lhs.swap(rhs);
 	}
