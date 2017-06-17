@@ -15,17 +15,21 @@ if (XG_TESTS)
 	target_link_libraries(xgtest xg)
 endif()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+
 if(WIN32)
-
+	add_definitions(-DGUID_WINDOWS)
 elseif(APPLE)
-
+	find_library(CFLIB CoreFoundation)
+	target_link_libraries(xg ${CFLIB})
+	add_definitions(-DGUID_CFUUID)
 else()
 	find_package(Libuuid REQUIRED)
 	if (NOT LIBUUID_FOUND)
-		message(FATAL_ERROR "You might need to run something like: sudo apt-get install uuid-dev")
+		message(FATAL_ERROR
+			"You might need to run 'sudo apt-get install uuid-dev' or similar")
 	endif()
 	include_directories(${LIBUUID_INCLUDE_DIR})
 	target_link_libraries(xg ${LIBUUID_LIBRARY})
 	add_definitions(-DGUID_LIBUUID)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 endif()
