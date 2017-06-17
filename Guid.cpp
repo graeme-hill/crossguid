@@ -48,16 +48,23 @@ BEGIN_XG_NAMESPACE
 #ifdef GUID_ANDROID
 AndroidGuidInfo androidInfo;
 
+AndroidGuidInfo AndroidGuidInfo::fromJniEnv(JNIEnv *env)
+{
+	AndroidGuidInfo info;
+	info.env = env;
+	info.uuidClass = env->FindClass("java/util/UUID");
+	info.newGuidMethod = env->GetStaticMethodID(
+		info.uuidClass, "randomUUID", "()Ljava/util/UUID;");
+	info.mostSignificantBitsMethod = env->GetMethodID(
+		info.uuidClass, "getMostSignificantBits", "()J");
+	info.leastSignificantBitsMethod = env->GetMethodID(
+		info.uuidClass, "getLeastSignificantBits", "()J");
+	return info;
+}
+
 void initJni(JNIEnv *env)
 {
-	androidInfo =
-	{
-		env,
-		env->FindClass("java/util/UUID"),
-		env->GetStaticMethodID(_uuidClass, "randomUUID", "()Ljava/util/UUID;"),
-		env->GetMethodID(_uuidClass, "getMostSignificantBits", "()J");
-		env->GetMethodID(_uuidClass, "getLeastSignificantBits", "()J");
-	};
+	androidInfo = AndroidGuidInfo::fromJniEnv(env);
 }
 #endif
 
@@ -92,15 +99,15 @@ std::string Guid::str() const
 {
 	char one[10], two[6], three[6], four[6], five[14];
 
-	std::snprintf(one, 10, "%02x%02x%02x%02x",
+	snprintf(one, 10, "%02x%02x%02x%02x",
 		_bytes[0], _bytes[1], _bytes[2], _bytes[3]);
-	std::snprintf(two, 6, "%02x%02x",
+	snprintf(two, 6, "%02x%02x",
 		_bytes[4], _bytes[5]);
-	std::snprintf(three, 6, "%02x%02x",
+	snprintf(three, 6, "%02x%02x",
 		_bytes[6], _bytes[7]);
-	std::snprintf(four, 6, "%02x%02x",
+	snprintf(four, 6, "%02x%02x",
 		_bytes[8], _bytes[9]);
-	std::snprintf(five, 14, "%02x%02x%02x%02x%02x%02x",
+	snprintf(five, 14, "%02x%02x%02x%02x%02x%02x",
 		_bytes[10], _bytes[11], _bytes[12], _bytes[13], _bytes[14], _bytes[15]);
 	const std::string sep("-");
 	std::string out(one);
@@ -218,7 +225,7 @@ bool Guid::operator!=(const Guid &other) const
 }
 
 // member swap function
-void Guid::swap(Guid& other) noexcept
+void Guid::swap(Guid& other)
 {
 	_bytes.swap(other._bytes);
 }

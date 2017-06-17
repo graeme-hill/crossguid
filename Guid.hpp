@@ -62,7 +62,7 @@ public:
 
 	operator std::string() const;
 
-	void swap(Guid &other) noexcept;
+	void swap(Guid &other);
 
 private:
 
@@ -78,6 +78,8 @@ Guid newGuid();
 #ifdef GUID_ANDROID
 struct AndroidGuidInfo
 {
+	static AndroidGuidInfo fromJniEnv(JNIEnv *env);
+
 	JNIEnv *env;
 	jclass uuidClass;
 	jmethodID newGuidMethod;

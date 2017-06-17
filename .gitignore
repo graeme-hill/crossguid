@@ -2,3 +2,5 @@ build/
 *.tmp
 *.bak
 *.swp
+android/libs/
+android/obj/
