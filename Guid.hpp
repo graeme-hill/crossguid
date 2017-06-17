@@ -121,5 +121,4 @@ namespace std
 			return static_cast<result_type>(hasher(guid.str()));
 		}
 	};
-
-};
+}

@@ -331,10 +331,9 @@ Guid GuidGenerator::newGuid()
 // call member swap function of lhs, passing rhs
 namespace std
 {
-
 	template <>
 	void swap(Guid& lhs, Guid& rhs)
 	{
 		lhs.swap(rhs);
 	}
-};
+}
