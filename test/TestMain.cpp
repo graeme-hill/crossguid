@@ -1,7 +1,7 @@
-#include "test.h"
+#include "Test.hpp"
 #include <iostream>
 
-int main(int argc, char *argv[])
+int main()
 {
   return test(GuidGenerator(), std::cout);
 }

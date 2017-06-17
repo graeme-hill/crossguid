@@ -36,6 +36,9 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
+#define BEGIN_XG_NAMESPACE namespace xg {
+#define END_XG_NAMESPACE namespace }
+
 // Class to represent a GUID/UUID. Each instance acts as a wrapper around a
 // 16 byte value that can be passed around by value. It also supports
 // conversion to string (via the stream operator <<) and conversion from a
