@@ -223,7 +223,7 @@ Guid::Guid(const std::string &fromString)
 }
 
 // create empty guid
-Guid::Guid() : _bytes({0})
+Guid::Guid() : _bytes{ 0 }
 { }
 
 // copy constructor
