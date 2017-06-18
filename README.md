@@ -14,8 +14,8 @@ determined by spefifying one of the following preprocessor flags:
 
 ## Versions
 
-This is version 2 of CrossGuid. If you all already using CrossGuid and your code
-uses `GuidGenerator` then you are using version 1. Differences in version 2:
+This is version 0.2 of CrossGuid. If you all already using CrossGuid and your code
+uses `GuidGenerator` then you are using version 0.1. Differences in version 0.2:
 
 * Put everything inside the namespace `xg` instead of using the global
 namespace.
@@ -31,8 +31,13 @@ is just stored as a global variable.
 * Added CMake build system. Instead of different scripts for each platform you
 can just run cmake and it should handle each platform (except Android which
 again is special).
+* Actual guid bytes are stored in `std::array<unsigned char, 16>` instead of
+`std::vector<unsigned char>`.
+* More error checking (like if you try to create a guid with invalid number of
+bytes).
 
-If you're happily using version 1 then there's not really any reason to change.
+If you're happily using version 0.1 then there's not really any reason to
+change.
 
 ## Compiling
 
@@ -78,6 +83,19 @@ Create from a string:
 
 ```cpp
 xg::Guid g("c405c66c-ccbb-4ffd-9b62-c286c0fd7a3b");
+```
+
+### Checking validity
+
+If you have some string value and you need to check whether it is a valid guid
+then you can simply attempt to construct the guid:
+
+```cpp
+xg::Guid g("bad-guid-string");
+if (!g.isValid())
+{
+	// do stuff
+}
 ```
 
 ### Converting guid to string
