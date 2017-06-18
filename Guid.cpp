@@ -280,7 +280,7 @@ Guid newGuid()
 	auto bytes = CFUUIDGetUUIDBytes(newId);
 	CFRelease(newId);
 
-	const unsigned char byteArray[16] =
+	std::array<unsigned char, 16> byteArray =
 	{
 		bytes.byte0,
 		bytes.byte1,
@@ -310,7 +310,7 @@ Guid newGuid()
 	GUID newId;
 	CoCreateGuid(&newId);
 
-	const unsigned char bytes[16] =
+	std::array<unsigned char, 16> bytes =
 	{
 		(unsigned char)((newId.Data1 >> 24) & 0xFF),
 		(unsigned char)((newId.Data1 >> 16) & 0xFF),
@@ -333,7 +333,7 @@ Guid newGuid()
 		(unsigned char)newId.Data4[7]
 	};
 
-  return bytes;
+	return bytes;
 }
 #endif
 
@@ -348,7 +348,7 @@ Guid newGuid()
 	jlong leastSignificant = androidInfo.env->CallLongMethod(javaUuid,
 		androidInfo.leastSignificantBitsMethod);
 
-	unsigned char bytes[16] =
+	std::array<unsigned char, 16> bytes =
 	{
 		(mostSignificant >> 56) & 0xFF,
 		(mostSignificant >> 48) & 0xFF,
