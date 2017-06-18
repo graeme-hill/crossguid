@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include <functional>
 #include <iostream>
-#include <vector>
+#include <array>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -48,7 +48,7 @@ BEGIN_XG_NAMESPACE
 class Guid
 {
 public:
-	Guid(const std::vector<unsigned char> &bytes);
+	Guid(const std::array<unsigned char, 16> &bytes);
 	Guid(const unsigned char *bytes);
 	Guid(const std::string &fromString);
 	Guid();
@@ -63,9 +63,10 @@ public:
 	bool isValid() const;
 
 private:
+	void zeroify();
 
 	// actual data
-	std::vector<unsigned char> _bytes;
+	std::array<unsigned char, 16> _bytes;
 
 	// make the << operator a friend so it can access _bytes
 	friend std::ostream &operator<<(std::ostream &s, const Guid &guid);

@@ -41,8 +41,6 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
-using namespace std;
-
 BEGIN_XG_NAMESPACE
 
 #ifdef GUID_ANDROID
@@ -69,29 +67,29 @@ void initJni(JNIEnv *env)
 #endif
 
 // overload << so that it's easy to convert to a string
-ostream &operator<<(ostream &s, const Guid &guid)
+std::ostream &operator<<(std::ostream &s, const Guid &guid)
 {
-	return s << hex << setfill('0')
-		<< setw(2) << (int)guid._bytes[0]
-		<< setw(2) << (int)guid._bytes[1]
-		<< setw(2) << (int)guid._bytes[2]
-		<< setw(2) << (int)guid._bytes[3]
+	return s << std::hex << std::setfill('0')
+		<< std::setw(2) << (int)guid._bytes[0]
+		<< std::setw(2) << (int)guid._bytes[1]
+		<< std::setw(2) << (int)guid._bytes[2]
+		<< std::setw(2) << (int)guid._bytes[3]
 		<< "-"
-		<< setw(2) << (int)guid._bytes[4]
-		<< setw(2) << (int)guid._bytes[5]
+		<< std::setw(2) << (int)guid._bytes[4]
+		<< std::setw(2) << (int)guid._bytes[5]
 		<< "-"
-		<< setw(2) << (int)guid._bytes[6]
-		<< setw(2) << (int)guid._bytes[7]
+		<< std::setw(2) << (int)guid._bytes[6]
+		<< std::setw(2) << (int)guid._bytes[7]
 		<< "-"
-		<< setw(2) << (int)guid._bytes[8]
-		<< setw(2) << (int)guid._bytes[9]
+		<< std::setw(2) << (int)guid._bytes[8]
+		<< std::setw(2) << (int)guid._bytes[9]
 		<< "-"
-		<< setw(2) << (int)guid._bytes[10]
-		<< setw(2) << (int)guid._bytes[11]
-		<< setw(2) << (int)guid._bytes[12]
-		<< setw(2) << (int)guid._bytes[13]
-		<< setw(2) << (int)guid._bytes[14]
-		<< setw(2) << (int)guid._bytes[15];
+		<< std::setw(2) << (int)guid._bytes[10]
+		<< std::setw(2) << (int)guid._bytes[11]
+		<< std::setw(2) << (int)guid._bytes[12]
+		<< std::setw(2) << (int)guid._bytes[13]
+		<< std::setw(2) << (int)guid._bytes[14]
+		<< std::setw(2) << (int)guid._bytes[15];
 }
 
 bool Guid::isValid() const
@@ -133,18 +131,13 @@ Guid::operator std::string() const
 }
 
 // create a guid from vector of bytes
-Guid::Guid(const vector<unsigned char> &bytes) : _bytes(bytes)
-{
-	if (_bytes.size() != 16)
-	{
-		_bytes = vector<unsigned char>(16, 0);
-	}
-}
+Guid::Guid(const std::array<unsigned char, 16> &bytes) : _bytes(bytes)
+{ }
 
 // create a guid from array of bytes
 Guid::Guid(const unsigned char *bytes)
 {
-	_bytes.assign(bytes, bytes + 16);
+	std::copy(bytes, bytes + 16, std::begin(_bytes));
 }
 
 // converts a single hex char to a number (0 - 15)
@@ -169,15 +162,21 @@ unsigned char hexPairToChar(char a, char b)
 }
 
 // create a guid from string
-Guid::Guid(const string &fromString)
+Guid::Guid(const std::string &fromString)
 {
-	_bytes.clear();
-
 	char charOne, charTwo;
 	bool lookingForFirstChar = true;
+	unsigned nextByte = 0;
 
 	for (const char &ch : fromString)
 	{
+		if (nextByte >= 16)
+		{
+			// There are too many characters in this string so the guid is bad
+			zeroify();
+			return;
+		}
+
 		if (ch == '-')
 			continue;
 
@@ -190,22 +189,31 @@ Guid::Guid(const string &fromString)
 		{
 			charTwo = ch;
 			auto byte = hexPairToChar(charOne, charTwo);
-			_bytes.push_back(byte);
+			_bytes[nextByte++] = byte;
 			lookingForFirstChar = true;
 		}
+	}
+
+	// if there were fewer than 16 bytes in the string then guid is bad
+	if (nextByte < 16)
+	{
+		zeroify();
+		return;
 	}
 }
 
 // create empty guid
-Guid::Guid()
-{
-	_bytes = vector<unsigned char>(16, 0);
-}
+Guid::Guid() : _bytes{ 0 }
+{ }
 
 // copy constructor
-Guid::Guid(const Guid &other)
+Guid::Guid(const Guid &other) : _bytes(other._bytes)
+{ }
+
+// set all bytes to zero
+void Guid::zeroify()
 {
-	_bytes = other._bytes;
+	std::fill(_bytes.begin(), _bytes.end(), 0);
 }
 
 // overload assignment operator

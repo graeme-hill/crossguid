@@ -90,27 +90,49 @@ int test(std::ostream &outStream)
 		failed++;
 	}
 
+	std::array<unsigned char, 16> bytes =
+	{
+		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+		0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0xdd
+	};
+	xg::Guid guidFromBytes(bytes);
+	xg::Guid guidFromString("0102030405060708090a0b0c0d0e0fdd");
+	if (guidFromBytes != guidFromString)
+	{
+		outStream << "FAIL - String/bytes make different guids" << std::endl;
+		failed++;
+	}
+
 	/*************************************************************************
 	* ERROR HANDLING
 	*************************************************************************/
 
 	xg::Guid empty;
-	std::vector<unsigned char> notEnoughBytes{ 1, 2, 3, 4 };
-	xg::Guid tooFew(notEnoughBytes);
-	if (tooFew != empty || tooFew.isValid())
+	xg::Guid twoTooFew("7bcd757f-5b10-4f9b-af69-1a1f226f3b");
+	if (twoTooFew != empty || twoTooFew.isValid())
 	{
-		outStream << "FAIL - Guid created from too few bytes" << std::endl;
+		outStream << "FAIL - Guid from two too few chars" << std::endl;
 		failed++;
 	}
 
-	std::vector<unsigned char> tooManyBytes
+	xg::Guid oneTooFew("16d1bd03-09a5-47d3-944b-5e326fd52d2");
+	if (oneTooFew != empty || oneTooFew.isValid())
 	{
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
-	};
-	xg::Guid tooMany(tooManyBytes);
-	if (tooMany != empty || tooMany.isValid())
+		outStream << "FAIL - Guid from one too few chars" << std::endl;
+		failed++;
+	}
+
+	xg::Guid twoTooMany("7bcd757f-5b10-4f9b-af69-1a1f226f3beeff");
+	if (twoTooMany != empty || twoTooMany.isValid())
 	{
-		outStream << "FAIL - Guid created from too many bytes" << std::endl;
+		outStream << "FAIL - Guid from two too many chars" << std::endl;
+		failed++;
+	}
+
+	xg::Guid oneTooMany("16d1bd03-09a5-47d3-944b-5e326fd52d27a");
+	if (oneTooMany != empty || oneTooMany.isValid())
+	{
+		outStream << "FAIL - Guid from one too many chars" << std::endl;
 		failed++;
 	}
 
