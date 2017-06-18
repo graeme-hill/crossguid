@@ -223,7 +223,7 @@ Guid::Guid(const std::string &fromString)
 }
 
 // create empty guid
-Guid::Guid() : _bytes{ 0 }
+Guid::Guid() : _bytes({0})
 { }
 
 // copy constructor
@@ -350,23 +350,26 @@ Guid newGuid()
 
 	std::array<unsigned char, 16> bytes =
 	{
-		(mostSignificant >> 56) & 0xFF,
-		(mostSignificant >> 48) & 0xFF,
-		(mostSignificant >> 40) & 0xFF,
-		(mostSignificant >> 32) & 0xFF,
-		(mostSignificant >> 24) & 0xFF,
-		(mostSignificant >> 16) & 0xFF,
-		(mostSignificant >> 8) & 0xFF,
-		(mostSignificant) & 0xFF,
-		(leastSignificant >> 56) & 0xFF,
-		(leastSignificant >> 48) & 0xFF,
-		(leastSignificant >> 40) & 0xFF,
-		(leastSignificant >> 32) & 0xFF,
-		(leastSignificant >> 24) & 0xFF,
-		(leastSignificant >> 16) & 0xFF,
-		(leastSignificant >> 8) & 0xFF,
-		(leastSignificant) & 0xFF,
+		(unsigned char)((mostSignificant >> 56) & 0xFF),
+		(unsigned char)((mostSignificant >> 48) & 0xFF),
+		(unsigned char)((mostSignificant >> 40) & 0xFF),
+		(unsigned char)((mostSignificant >> 32) & 0xFF),
+		(unsigned char)((mostSignificant >> 24) & 0xFF),
+		(unsigned char)((mostSignificant >> 16) & 0xFF),
+		(unsigned char)((mostSignificant >> 8) & 0xFF),
+		(unsigned char)((mostSignificant) & 0xFF),
+		(unsigned char)((leastSignificant >> 56) & 0xFF),
+		(unsigned char)((leastSignificant >> 48) & 0xFF),
+		(unsigned char)((leastSignificant >> 40) & 0xFF),
+		(unsigned char)((leastSignificant >> 32) & 0xFF),
+		(unsigned char)((leastSignificant >> 24) & 0xFF),
+		(unsigned char)((leastSignificant >> 16) & 0xFF),
+		(unsigned char)((leastSignificant >> 8) & 0xFF),
+		(unsigned char)((leastSignificant) & 0xFF)
 	};
+
+	androidInfo.env->DeleteLocalRef(javaUuid);
+
 	return bytes;
 }
 #endif
