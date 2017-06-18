@@ -150,7 +150,7 @@ internally to construct a `Guid` object from the raw data given by the system's
 built-in guid generation function. There are two key constructors for this:
 
 ```cpp
-Guid(const vector<unsigned char> &bytes);
+Guid(std::array<unsigned char, 16> &bytes);
 ```
 
 and
@@ -159,7 +159,8 @@ and
 Guid(const unsigned char * bytes);
 ```
 
-In both cases the constructor expects to receive exactly 16 bytes.
+When possible prefer the `std::array` constructor because it is safer. If you
+pass in an incorrectly sized C array then bad things will happen.
 
 ### Comparing guids
 
