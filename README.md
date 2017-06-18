@@ -136,13 +136,6 @@ There is also a `str()` function that returns a `std::string`:
 std::string guidStr = xg::newGuid().str();
 ```
 
-Or use `c_str()` to get a `char *`:
-
-```cpp
-auto g = xg::newGuid();
-std::string guidStr = g.c_str();
-```
-
 ### Creating a guid from raw bytes
 
 It's unlikely that you will need this, but this is done within the library
