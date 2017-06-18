@@ -24,6 +24,10 @@ THE SOFTWARE.
 
 #pragma once
 
+#ifdef GUID_ANDROID
+#include <jni.h>
+#endif
+
 #include <functional>
 #include <iostream>
 #include <array>
@@ -31,10 +35,6 @@ THE SOFTWARE.
 #include <string>
 #include <utility>
 #include <iomanip>
-
-#ifdef GUID_ANDROID
-#include <jni.h>
-#endif
 
 #define BEGIN_XG_NAMESPACE namespace xg {
 #define END_XG_NAMESPACE }
