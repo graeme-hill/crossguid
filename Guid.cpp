@@ -143,16 +143,36 @@ Guid::Guid(const unsigned char *bytes)
 // converts a single hex char to a number (0 - 15)
 unsigned char hexDigitToChar(char ch)
 {
+	// 0-9
 	if (ch > 47 && ch < 58)
 		return ch - 48;
 
+	// a-f
 	if (ch > 96 && ch < 103)
 		return ch - 87;
 
+	// A-F
 	if (ch > 64 && ch < 71)
 		return ch - 55;
 
 	return 0;
+}
+
+bool isValidHexChar(char ch)
+{
+	// 0-9
+	if (ch > 47 && ch < 58)
+		return true;
+
+	// a-f
+	if (ch > 96 && ch < 103)
+		return true;
+
+	// A-F
+	if (ch > 64 && ch < 71)
+		return true;
+
+	return false;
 }
 
 // converts the two hexadecimal characters to an unsigned char (a byte)
@@ -170,15 +190,15 @@ Guid::Guid(const std::string &fromString)
 
 	for (const char &ch : fromString)
 	{
-		if (nextByte >= 16)
+		if (ch == '-')
+			continue;
+
+		if (nextByte >= 16 || !isValidHexChar(ch))
 		{
-			// There are too many characters in this string so the guid is bad
+			// Invalid string so bail
 			zeroify();
 			return;
 		}
-
-		if (ch == '-')
-			continue;
 
 		if (lookingForFirstChar)
 		{

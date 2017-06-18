@@ -136,6 +136,13 @@ int test(std::ostream &outStream)
 		failed++;
 	}
 
+	xg::Guid badString("!!bad-guid-string!!");
+	if (badString != empty || badString.isValid())
+	{
+		outStream << "FAIL - Guid from bad string" << std::endl;
+		failed++;
+	}
+
 	if (failed == 0)
 	{
 		outStream << "All tests passed!" << std::endl;
