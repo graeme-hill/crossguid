@@ -98,6 +98,9 @@ if (!g.isValid())
 }
 ```
 
+If the guid string is not valid then all bytes are set to zero and `isValid()`
+returns `false`.
+
 ### Converting guid to string
 
 First of all, there is normally no reason to convert a guid to a string except
