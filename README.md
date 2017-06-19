@@ -24,7 +24,7 @@ namespace.
 is a special snowflake requiring state (`JNIEnv *`) I introduced the
 `GuidGenerator` class specifically so that there would be somewhere to store
 the `JNIEnv *` when running on Android. However, this basically meant
-complicating the library for the sake of one platform. In version 2 the goal is
+complicating the library for the sake of one platform. In version 0.2 the goal is
 to design for the normal platforms and let Android be weird. In Android you just
 need to run `xg::initJni(JNIEnv *)` before you create any guids. The `JNIEnv *`
 is just stored as a global variable.
