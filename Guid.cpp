@@ -94,6 +94,12 @@ ostream &operator<<(ostream &s, const Guid &guid)
 		<< setw(2) << (int)guid._bytes[15];
 }
 
+bool Guid::isValid() const
+{
+	xg::Guid empty;
+	return *this != empty;
+}
+
 // convert to string using std::snprintf() and std::string
 std::string Guid::str() const
 {
@@ -120,12 +126,6 @@ std::string Guid::str() const
 	return out;
 }
 
-// convert to a C-style string
-const char *Guid::c_str() const
-{
-	return str().c_str();
-}
-
 // conversion operator for std::string
 Guid::operator std::string() const
 {
@@ -133,9 +133,12 @@ Guid::operator std::string() const
 }
 
 // create a guid from vector of bytes
-Guid::Guid(const vector<unsigned char> &bytes)
+Guid::Guid(const vector<unsigned char> &bytes) : _bytes(bytes)
 {
-	_bytes = bytes;
+	if (_bytes.size() != 16)
+	{
+		_bytes = vector<unsigned char>(16, 0);
+	}
 }
 
 // create a guid from array of bytes
@@ -225,7 +228,7 @@ bool Guid::operator!=(const Guid &other) const
 }
 
 // member swap function
-void Guid::swap(Guid& other)
+void Guid::swap(Guid &other)
 {
 	_bytes.swap(other._bytes);
 }
@@ -347,7 +350,7 @@ END_XG_NAMESPACE
 namespace std
 {
 	template <>
-	void swap(xg::Guid& lhs, xg::Guid& rhs)
+	void swap(xg::Guid &lhs, xg::Guid &rhs)
 	{
 		lhs.swap(rhs);
 	}

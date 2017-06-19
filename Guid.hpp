@@ -58,11 +58,9 @@ public:
 	bool operator!=(const Guid &other) const;
 
 	std::string str() const;
-	const char* c_str() const;
-
 	operator std::string() const;
-
 	void swap(Guid &other);
+	bool isValid() const;
 
 private:
 
