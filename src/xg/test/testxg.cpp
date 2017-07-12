@@ -1,4 +1,5 @@
-#include "Test.hpp"
+#include "xg.hpp"
+#include <iostream>
 
 int test(std::ostream &outStream)
 {
@@ -153,4 +154,9 @@ int test(std::ostream &outStream)
 		outStream << failed << " tests failed." << std::endl;
 		return 1;
 	}
+}
+
+int main()
+{
+	return test(std::cout);
 }

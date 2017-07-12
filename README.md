@@ -46,17 +46,29 @@ Just do the normal cmake thing:
 ```
 mkdir build
 cd build
-cmake ..
+cmake ../src
 make
 ```
 
 ## Running tests
 
 After compiling as described above you should get two files: `libxg.a` (the
-static library) and `xgtest` (the test runner). So to run the tests just do:
+static library) and `testxg` (the test runner). So to run the tests just do:
 
 ```
-./xgtest
+./testxg
+```
+
+or
+
+```
+ctest
+```
+
+or
+
+```
+cmake test
 ```
 
 ## Basic usage

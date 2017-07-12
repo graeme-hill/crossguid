@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 
 #include <cstring>
-#include "Guid.hpp"
+#include "xg.hpp"
 
 #ifdef GUID_LIBUUID
 #include <uuid/uuid.h>
