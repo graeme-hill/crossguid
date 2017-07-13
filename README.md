@@ -71,7 +71,7 @@ or
 cmake test
 ```
 
-## Project inegration
+## Project integration
 See example folder for one way to easily integrate crossguid into your CMake projects!
 
 ## Basic usage
