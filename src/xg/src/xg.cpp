@@ -224,7 +224,7 @@ Guid::Guid(const std::string &fromString)
 }
 
 // create empty guid
-Guid::Guid() : _bytes{ 0 }
+Guid::Guid() : _bytes{ {0} }
 { }
 
 // copy constructor
@@ -282,7 +282,7 @@ Guid newGuid()
 	CFRelease(newId);
 
 	std::array<unsigned char, 16> byteArray =
-	{
+	{{
 		bytes.byte0,
 		bytes.byte1,
 		bytes.byte2,
@@ -299,7 +299,7 @@ Guid newGuid()
 		bytes.byte13,
 		bytes.byte14,
 		bytes.byte15
-	};
+	}};
 	return byteArray;
 }
 #endif
