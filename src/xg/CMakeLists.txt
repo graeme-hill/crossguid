@@ -1,5 +1,9 @@
 project(libxg VERSION 0.2 LANGUAGES CXX)
 
+# Set flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_STANDARD 11)
+
 add_library(xg
     src/xg.cpp)
     
@@ -40,9 +44,6 @@ install(EXPORT xgConfig DESTINATION share/xg/cmake)
 # This makes the project importable from the build directory
 export(TARGETS xg FILE xgConfig.cmake)
 
-# Set flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-set(CMAKE_CXX_STANDARD 11)
 
 # Unit tests for xg
 add_executable(testxg
