@@ -4,3 +4,4 @@ build/
 *.swp
 android/libs/
 android/obj/
+cmake_build

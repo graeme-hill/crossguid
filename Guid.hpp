@@ -25,6 +25,7 @@ THE SOFTWARE.
 #pragma once
 
 #ifdef GUID_ANDROID
+#include <thread>
 #include <jni.h>
 #endif
 
@@ -84,11 +85,15 @@ struct AndroidGuidInfo
 	jmethodID newGuidMethod;
 	jmethodID mostSignificantBitsMethod;
 	jmethodID leastSignificantBitsMethod;
+	std::thread::id initThreadId;
 };
 
 extern AndroidGuidInfo androidInfo;
 
 void initJni(JNIEnv *env);
+
+// overloading for multi-threaded calls
+Guid newGuid(JNIEnv *env);
 #endif
 
 END_XG_NAMESPACE

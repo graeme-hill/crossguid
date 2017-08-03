@@ -207,8 +207,7 @@ following requirements:
 * Android emulator is already running (or you have physical device connected).
 * You're using bash.
 * adb is in your path.
-* ndk-build and other ndk cross-compile tools are in your path.
-* You have a jdk setup including `JAVA_HOME` environment variable.
+* You have an Android sdk setup including `ANDROID_HOME` environment variable.
 
 ## License
 
