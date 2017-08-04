@@ -39,6 +39,7 @@ THE SOFTWARE.
 
 #ifdef GUID_ANDROID
 #include <jni.h>
+#include <cassert>
 #endif
 
 BEGIN_XG_NAMESPACE
@@ -50,13 +51,16 @@ AndroidGuidInfo AndroidGuidInfo::fromJniEnv(JNIEnv *env)
 {
 	AndroidGuidInfo info;
 	info.env = env;
-	info.uuidClass = env->FindClass("java/util/UUID");
+	auto localUuidClass = env->FindClass("java/util/UUID");
+	info.uuidClass = (jclass)env->NewGlobalRef(localUuidClass);
+	env->DeleteLocalRef(localUuidClass);
 	info.newGuidMethod = env->GetStaticMethodID(
 		info.uuidClass, "randomUUID", "()Ljava/util/UUID;");
 	info.mostSignificantBitsMethod = env->GetMethodID(
 		info.uuidClass, "getMostSignificantBits", "()J");
 	info.leastSignificantBitsMethod = env->GetMethodID(
 		info.uuidClass, "getLeastSignificantBits", "()J");
+	info.initThreadId = std::this_thread::get_id();
 	return info;
 }
 
@@ -340,13 +344,15 @@ Guid newGuid()
 
 // android version that uses a call to a java api
 #ifdef GUID_ANDROID
-Guid newGuid()
+Guid newGuid(JNIEnv *env)
 {
-	jobject javaUuid = androidInfo.env->CallStaticObjectMethod(
+	assert(env != androidInfo.env || std::this_thread::get_id() == androidInfo.initThreadId);
+
+	jobject javaUuid = env->CallStaticObjectMethod(
 		androidInfo.uuidClass, androidInfo.newGuidMethod);
-	jlong mostSignificant = androidInfo.env->CallLongMethod(javaUuid,
+	jlong mostSignificant = env->CallLongMethod(javaUuid,
 		androidInfo.mostSignificantBitsMethod);
-	jlong leastSignificant = androidInfo.env->CallLongMethod(javaUuid,
+	jlong leastSignificant = env->CallLongMethod(javaUuid,
 		androidInfo.leastSignificantBitsMethod);
 
 	std::array<unsigned char, 16> bytes =
@@ -369,11 +375,17 @@ Guid newGuid()
 		(unsigned char)((leastSignificant) & 0xFF)
 	};
 
-	androidInfo.env->DeleteLocalRef(javaUuid);
+	env->DeleteLocalRef(javaUuid);
 
 	return bytes;
 }
+
+Guid newGuid()
+{
+	return newGuid(androidInfo.env);
+}
 #endif
+
 
 END_XG_NAMESPACE
 
