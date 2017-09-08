@@ -60,6 +60,7 @@ public:
 
 	std::string str() const;
 	operator std::string() const;
+	const std::array<unsigned char, 16>& bytes() const;
 	void swap(Guid &other);
 	bool isValid() const;
 

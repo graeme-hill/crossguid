@@ -134,6 +134,12 @@ Guid::operator std::string() const
 	return str();
 }
 
+// Access underlying bytes
+const std::array<unsigned char, 16>& Guid::bytes() const
+{
+    return _bytes;
+}
+
 // create a guid from vector of bytes
 Guid::Guid(const std::array<unsigned char, 16> &bytes) : _bytes(bytes)
 { }
