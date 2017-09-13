@@ -103,6 +103,12 @@ int test(std::ostream &outStream)
 		failed++;
 	}
 
+	if(!std::equal(guidFromBytes.bytes().begin(), guidFromBytes.bytes().end(), bytes.begin()))
+	{
+		outStream << "FAIL - array returned from bytes() is wrong" << std::endl;
+		failed++;
+	}
+
 	/*************************************************************************
 	* ERROR HANDLING
 	*************************************************************************/
