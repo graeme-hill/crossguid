@@ -69,7 +69,8 @@ endif()
 # VERSION ${XG_VERSION_STRING} SOVERSION ${XG_VERSION_STRING}
 set_target_properties(xg 
 					  PROPERTIES
-					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+					  OUTPUT_NAME "crossguid")
 
 # Install target
 install(TARGETS xg EXPORT XGTargets
