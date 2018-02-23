@@ -24,7 +24,7 @@ if(UNIX)
     set(XG_FRAMEWORK_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
 
     set(XG_CMAKE_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid/cmake")
-    set(XG_ADDITIONAL_FILES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/XG")
+    set(XG_ADDITIONAL_FILES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid")
 elseif(WINDOWS)
     set(XG_INC_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}") 
     set(XG_RUNTIME_INSTALL_DIR   "bin") 
@@ -90,6 +90,11 @@ install(EXPORT  XGTargets
 		DESTINATION ${XG_CMAKE_CONFIG_INSTALL_DIR}
 		NAMESPACE crossguid::
 		FILE crossguid-config.cmake)
+
+# Install readme and license
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE" "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+        DESTINATION ${XG_ADDITIONAL_FILES_INSTALL_DIR}
+        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 
 # Write/install version file [not used yet]
 # if we have version inclue this:
