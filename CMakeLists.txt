@@ -41,7 +41,6 @@ endif()
 add_library(xg STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/Guid.cpp)
 target_include_directories(xg PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
 									 $<INSTALL_INTERFACE:include>)
-add_library("crossguid" ALIAS xg) # for install
 
 if(WIN32)
 	add_definitions(-DGUID_WINDOWS)
@@ -89,6 +88,7 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include"
 # Make cmake config files for all targets
 install(EXPORT  XGTargets
 		DESTINATION ${XG_CMAKE_CONFIG_INSTALL_DIR}
+		NAMESPACE crossguid::
 		FILE crossguid-config.cmake)
 
 # Write/install version file [not used yet]
