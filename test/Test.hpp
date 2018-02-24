@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Guid.hpp"
+#include <crossguid/guid.hpp>
 #include <iostream>
 
 int test(std::ostream &outStream);
