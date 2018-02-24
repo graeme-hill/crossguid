@@ -37,9 +37,6 @@ before_install:
         command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
         rvm get head || true
     fi
-
-# Install dependencies
-install:
   
 script:
   - export CHECKOUT_PATH=`pwd`;
