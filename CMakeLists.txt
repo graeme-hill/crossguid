@@ -42,7 +42,7 @@ else()
 	message(FATAL_ERROR "Could not set install folders for this platform!")
 endif()
 
-add_library(xg STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/Guid.cpp)
+add_library(xg STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
 target_include_directories(xg PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
 									 $<INSTALL_INTERFACE:include>)
 
