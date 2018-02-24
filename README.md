@@ -3,14 +3,38 @@
 CrossGuid is a minimal, cross platform, C++ GUID library. It uses the best
 native GUID/UUID generator on the given platform and has a generic class for
 parsing, stringifying, and comparing IDs. The guid generation technique is
-determined by spefifying one of the following preprocessor flags:
+determined by your platform:
 
-* `GUID_LIBUUID` - Uses `libuuid` which is normally used on linux but possibly
-  usable elsewhere as well.
-* `GUID_CFUUID` - Uses `CFCreateUUID` from Apple's `CoreFoundation` framework.
-  This works on both Mac OSX and iOS.
-* `GUID_WINDOWS` - Uses the built in `CoCreateGuid` function in Windows.
-* `GUID_ANDROID` - Uses JNI to invoke Java functions from Android SDK.
+## Linux
+
+On linux you can use `libuuid` which is pretty standard. On distros like Ubuntu
+it is available by default but to use it you need the header files so you have
+to do:
+
+    sudo apt-get install uuid-dev
+
+## Mac/iOS
+
+On Mac or iOS you can use `CFUUIDCreate` from `CoreFoundation`. Since it's a
+plain C function you don't even need to compile as Objective-C++.
+
+## Windows
+
+On Windows we just use the the built-in function `CoCreateGuid`. CMake can
+generate a Visual Studio project if that's your thing.
+
+## Android
+
+The Android version uses a handle to a `JNIEnv` object to invoke the
+`randomUUID()` function on `java.util.UUID` from C++. The Android specific code
+is all in the `android/` subdirectory. If you have an emulator already running,
+then you can run the `android.sh` script in the root directory. It has the
+following requirements:
+
+* Android emulator is already running (or you have physical device connected).
+* You're using bash.
+* adb is in your path.
+* You have an Android sdk setup including `ANDROID_HOME` environment variable.
 
 ## Versions
 
@@ -47,12 +71,12 @@ Just do the normal cmake thing:
 mkdir build
 cd build
 cmake ..
-make
+make install
 ```
 
 ## Running tests
 
-After compiling as described above you should get two files: `libxg.a` (the
+After compiling as described above you should get two files: `libcrossguid.a` (the
 static library) and `xgtest` (the test runner). So to run the tests just do:
 
 ```
@@ -169,45 +193,6 @@ void doGuidStuff(GuidGenerator generator)
     auto guidsAreNotEqual = guid1 != guid2;
 }
 ```
-
-## Linux
-
-**The Linux version uses the proprocessor flag `GUID_LIBUUID`**
-
-On linux you can use libuuid which is pretty standard. On distros like Ubuntu
-it is available by default but to use it you need the header files so you have
-to do:
-
-    sudo apt-get install uuid-dev
-
-## Mac/iOS
-
-**The Mac and iOS versions use the preprocessor flag `GUID_CFUUID`**
-
-On Mac or iOS you can use `CFUUIDCreate` from `CoreFoundation`. Since it's a
-plain C function you don't even need to compile as Objective-C++.
-
-## Windows
-
-**The Windows version uses the preprocessor flag `GUID_WINDOWS`**
-
-On Windows we just use the the built-in function `CoCreateGuid`. CMake can
-generate a Visual Studio project if that's your thing.
-
-## Android
-
-**The Android version uses the preprocessor flag `GUID_ANDROID`**
-
-The Android version uses a handle to a `JNIEnv` object to invoke the
-`randomUUID()` function on `java.util.UUID` from C++. The Android specific code
-is all in the `android/` subdirectory. If you have an emulator already running,
-then you can run the `android.sh` script in the root directory. It has the
-following requirements:
-
-* Android emulator is already running (or you have physical device connected).
-* You're using bash.
-* adb is in your path.
-* You have an Android sdk setup including `ANDROID_HOME` environment variable.
 
 ## License
 
