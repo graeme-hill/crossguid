@@ -66,7 +66,14 @@ else()
 	target_compile_definitions(xg PRIVATE GUID_CFUUID)
 endif()
 
-
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(WARNINGS "-Werror" "-Wall")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	set(WARNINGS "-Werror" "-Wall")
+elseif(MSVC)
+	set(WARNINGS "/WX" "/W4")
+endif()
+target_compile_options(xg PRIVATE ${WARNINGS}) 
 
 # Properties 
 # for a version number add 
