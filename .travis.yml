@@ -23,7 +23,6 @@ matrix:
   - os: osx
     osx_image: xcode9.2
     compiler: clang
-    env: USE_APPLE_CLANG="ON" BUILD_GUI="ON"
     
   - os: osx
     osx_image: xcode8.3
