@@ -42,25 +42,26 @@ target_include_directories(xg PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DI
 									 $<INSTALL_INTERFACE:include>)
 
 if(WIN32)
-	add_definitions(-DGUID_WINDOWS)
+	target_compile_definitions(xg PRIVATE GUID_WINDOWS)
 elseif(APPLE)
 	find_library(CFLIB CoreFoundation)
 	target_link_libraries(xg ${CFLIB})
-	add_definitions(-DGUID_CFUUID)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+	target_compile_definitions(xg PRIVATE GUID_CFUUID)
 elseif(ANDROID)
-	target_compile_definitions(xg PRIVATE GUID_ANDROID)
+	# GUID_ANDROID is used in the headers, so make PUBLIC
+	target_compile_definitions(xg PUBLIC GUID_ANDROID)
 else()
 	find_package(Libuuid REQUIRED)
 	if (NOT LIBUUID_FOUND)
 		message(FATAL_ERROR
 			"You might need to run 'sudo apt-get install uuid-dev' or similar")
 	endif()
-	include_directories(${LIBUUID_INCLUDE_DIR})
+	target_include_directories(xg PRIVATE ${LIBUUID_INCLUDE_DIR})
 	target_link_libraries(xg ${LIBUUID_LIBRARY})
-	add_definitions(-DGUID_LIBUUID)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+	target_compile_definitions(xg PRIVATE GUID_CFUUID)
 endif()
+
+
 
 # Properties 
 # for a version number add 
