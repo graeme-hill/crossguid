@@ -95,10 +95,10 @@ find_package(crossguid CONFIG [REQUIRED] PATH "/usr/local/include")
 ## Running tests
 
 After compiling as described above you should get two files: `libcrossguid.a` (the
-static library) and `xgtest` (the test runner). So to run the tests just do:
+static library) and `crossguid-test` (the test runner). So to run the tests just do:
 
 ```
-./xgtest
+./crossguid-test
 ```
 
 ## Basic usage
@@ -108,6 +108,8 @@ static library) and `xgtest` (the test runner). So to run the tests just do:
 Create a new random guid:
 
 ```cpp
+#include <crossguid/guid.hpp>
+...
 auto g = xg::newGuid();
 ```
 
