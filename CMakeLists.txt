@@ -63,7 +63,7 @@ else()
 	endif()
 	target_include_directories(xg PRIVATE ${LIBUUID_INCLUDE_DIR})
 	target_link_libraries(xg ${LIBUUID_LIBRARY})
-	target_compile_definitions(xg PRIVATE GUID_CFUUID)
+	target_compile_definitions(xg PRIVATE GUID_LIBUUID)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

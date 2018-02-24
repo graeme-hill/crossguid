@@ -56,6 +56,11 @@ script:
       brew link --overwrite cmake
     fi
   - cmake --version
+
+  - | 
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      sudo apt-get install uuid-dev
+    fi
   #######################################################################################
   # Build the library
   #######################################################################################
