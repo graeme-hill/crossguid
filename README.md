@@ -155,9 +155,9 @@ utilize strings because the `<<` operator is overloaded. To print a guid to
 `std::cout`:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto myGuid = generator.newGuid();
+    auto myGuid = xg::newGuid();
     std::cout << "Here is a guid: " << myGuid << std::endl;
 }
 ```
@@ -165,9 +165,9 @@ void doGuidStuff(GuidGenerator generator)
 Or to store a guid in a `std::string`:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto myGuid = generator.newGuid();
+    auto myGuid = xg::newGuid();
     std::stringstream stream;
     stream << myGuid;
     auto guidString = stream.str();
@@ -204,10 +204,10 @@ pass in an incorrectly sized C array then bad things will happen.
 `==` and `!=` are implemented, so the following works as expected:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto guid1 = generator.newGuid();
-    auto guid2 = generator.newGuid();
+    auto guid1 = xg::newGuid();
+    auto guid2 = xg::newGuid();
 
     auto guidsAreEqual = guid1 == guid2;
     auto guidsAreNotEqual = guid1 != guid2;
