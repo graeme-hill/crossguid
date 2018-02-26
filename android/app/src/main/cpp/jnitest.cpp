@@ -2,9 +2,9 @@
 #include <sstream>
 #include <atomic>
 #include <iostream>
-
+#include <crossguid/guid.hpp
 #include <jni.h>
-#include "Guid.hpp"
+
 #include "Test.hpp"
 
 JavaVM *&javaVM() {
