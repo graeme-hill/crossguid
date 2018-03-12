@@ -244,7 +244,7 @@ Guid::Guid(const Guid &other) : _bytes(other._bytes)
 // set all bytes to zero
 void Guid::zeroify()
 {
-	std::fill(_bytes.begin(), _bytes.end(), 0);
+	std::fill(_bytes.begin(), _bytes.end(), static_cast<unsigned char>(0));
 }
 
 // overload assignment operator
