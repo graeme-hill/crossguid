@@ -70,26 +70,8 @@ Just do the normal cmake thing:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="/usr/local/include"
+cmake .. -DCMAKE_INSTALL_PREFIX="/usr/local"
 make install
-```
-
-## Usage
-
-When you installed the library (e.g `/usr/local/include`) in a system-wide location, cmake will automatically find this library.
-```
-find_package(crossguid CONFIG [REQUIRED] )
-...
-target_link_libraries("yourTarget" "crossguid")
-```
-If you did install the library somewhere else you can give some hints to `find_package`
-```
-find_package(crossguid CONFIG [REQUIRED] PATH "/usr/local/include")
-```
-or by setting `crossguid_DIR="/usr/local/include/share/crossguid` to the directory where the installed cmake config files reside.
-```
-set(crossguid_DIR "/usr/local/include/share/crossguid")
-find_package(crossguid CONFIG [REQUIRED] PATH "/usr/local/include")
 ```
 
 ## Running tests
