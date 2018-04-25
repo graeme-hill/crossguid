@@ -70,7 +70,7 @@ Just do the normal cmake thing:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="/usr/local"
+cmake ..
 make install
 ```
 
