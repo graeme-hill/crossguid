@@ -24,7 +24,7 @@ set(CROSSGUID_FRAMEWORK_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
 set(CROSSGUID_CMAKE_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid/cmake")
 set(CROSSGUID_ADDITIONAL_FILES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid")
 
-add_library(crossguid STATIC ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
+add_library(crossguid ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
 target_include_directories(crossguid PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
