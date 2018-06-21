@@ -73,8 +73,7 @@ void initJni(JNIEnv *env)
 // overload << so that it's easy to convert to a string
 std::ostream &operator<<(std::ostream &s, const Guid &guid)
 {
-    std::ios_base::fmtflags f(s.flags()); // politely don't leave the ostream in hex mode
-	s << std::hex << std::setfill('0')
+	return s << std::hex << std::setfill('0')
 		<< std::setw(2) << (int)guid._bytes[0]
 		<< std::setw(2) << (int)guid._bytes[1]
 		<< std::setw(2) << (int)guid._bytes[2]
@@ -95,8 +94,6 @@ std::ostream &operator<<(std::ostream &s, const Guid &guid)
 		<< std::setw(2) << (int)guid._bytes[13]
 		<< std::setw(2) << (int)guid._bytes[14]
 		<< std::setw(2) << (int)guid._bytes[15];
-    s.flags(f);
-    return s;
 }
 
 bool Guid::isValid() const
