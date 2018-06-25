@@ -18,6 +18,7 @@ int test(std::ostream &outStream)
 	xg::Guid s2("16d1bd03-09a5-47d3-944b-5e326fd52d27");
 	xg::Guid s3("fdaba646-e07e-49de-9529-4499a5580c75");
 	xg::Guid s4("7bcd757f-5b10-4f9b-af69-1a1f226f3b3e");
+	xg::Guid s5("7bcd757f-5b10-4f9b-af69-1a1f226f3b31");
 
 	if (r1 == r2 || r1 == r3 || r2 == r3)
 	{
@@ -34,6 +35,11 @@ int test(std::ostream &outStream)
 	if (s1 != s4)
 	{
 		outStream << "FAIL - s1 and s4 should be equal" << std::endl;
+		failed++;
+	}
+
+	if (s4 < s5) {
+		outStream << "FAIL - s5 should should less than s4" << std::endl;
 		failed++;
 	}
 

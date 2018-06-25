@@ -99,6 +99,11 @@ std::ostream &operator<<(std::ostream &s, const Guid &guid)
 	return s;
 }
 
+bool operator<(const xg::Guid &lhs, const xg::Guid &rhs)
+{
+	return lhs.bytes() <  rhs.bytes();
+}
+
 bool Guid::isValid() const
 {
 	xg::Guid empty;
