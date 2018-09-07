@@ -56,7 +56,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(MSVC)
     set(WARNINGS "/WX" "/W4")
 endif()
-target_compile_options(crossguid PRIVATE ${WARNINGS})
+target_compile_options(crossguid PRIVATE ${WARNINGS} -fPIC)
 
 # Properties
 # for a version number add
