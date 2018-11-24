@@ -73,7 +73,8 @@ void initJni(JNIEnv *env)
 // overload << so that it's easy to convert to a string
 std::ostream &operator<<(std::ostream &s, const Guid &guid)
 {
-	return s << std::hex << std::setfill('0')
+	std::ios_base::fmtflags f(s.flags()); // politely don't leave the ostream in hex mode
+	s << std::hex << std::setfill('0')
 		<< std::setw(2) << (int)guid._bytes[0]
 		<< std::setw(2) << (int)guid._bytes[1]
 		<< std::setw(2) << (int)guid._bytes[2]
@@ -94,6 +95,13 @@ std::ostream &operator<<(std::ostream &s, const Guid &guid)
 		<< std::setw(2) << (int)guid._bytes[13]
 		<< std::setw(2) << (int)guid._bytes[14]
 		<< std::setw(2) << (int)guid._bytes[15];
+	s.flags(f);
+	return s;
+}
+
+bool operator<(const xg::Guid &lhs, const xg::Guid &rhs)
+{
+	return lhs.bytes() <  rhs.bytes();
 }
 
 bool Guid::isValid() const
@@ -244,7 +252,7 @@ Guid::Guid(const Guid &other) : _bytes(other._bytes)
 // set all bytes to zero
 void Guid::zeroify()
 {
-	std::fill(_bytes.begin(), _bytes.end(), 0);
+	std::fill(_bytes.begin(), _bytes.end(), static_cast<unsigned char>(0));
 }
 
 // overload assignment operator

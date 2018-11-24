@@ -72,6 +72,7 @@ private:
 
 	// make the << operator a friend so it can access _bytes
 	friend std::ostream &operator<<(std::ostream &s, const Guid &guid);
+	friend bool operator<(const Guid &lhs, const Guid &rhs);
 };
 
 Guid newGuid();

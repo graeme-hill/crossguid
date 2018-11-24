@@ -1,4 +1,4 @@
-# CrossGuid [![Build Status](https://travis-ci.org/gabyx/crossguid.svg?branch=master)](https://travis-ci.org/gabyx/crossguid)
+# CrossGuid [![Build Status](https://travis-ci.org/graeme-hill/crossguid.svg?branch=master)](https://travis-ci.org/graeme-hill/crossguid)
 
 CrossGuid is a minimal, cross platform, C++ GUID library. It uses the best
 native GUID/UUID generator on the given platform and has a generic class for
@@ -70,26 +70,8 @@ Just do the normal cmake thing:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="/usr/local/include"
+cmake ..
 make install
-```
-
-## Usage
-
-When you installed the library (e.g `/usr/local/include`) in a system-wide location, cmake will automatically find this library.
-```
-find_package(crossguid CONFIG [REQUIRED] )
-...
-target_link_libraries("yourTarget" "crossguid")
-```
-If you did install the library somewhere else you can give some hints to `find_package`
-```
-find_package(crossguid CONFIG [REQUIRED] PATH "/usr/local/include")
-```
-or by setting `crossguid_DIR="/usr/local/include/share/crossguid` to the directory where the installed cmake config files reside.
-```
-set(crossguid_DIR "/usr/local/include/share/crossguid")
-find_package(crossguid CONFIG [REQUIRED] PATH "/usr/local/include")
 ```
 
 ## Running tests
@@ -155,9 +137,9 @@ utilize strings because the `<<` operator is overloaded. To print a guid to
 `std::cout`:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto myGuid = generator.newGuid();
+    auto myGuid = xg::newGuid();
     std::cout << "Here is a guid: " << myGuid << std::endl;
 }
 ```
@@ -165,9 +147,9 @@ void doGuidStuff(GuidGenerator generator)
 Or to store a guid in a `std::string`:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto myGuid = generator.newGuid();
+    auto myGuid = xg::newGuid();
     std::stringstream stream;
     stream << myGuid;
     auto guidString = stream.str();
@@ -204,10 +186,10 @@ pass in an incorrectly sized C array then bad things will happen.
 `==` and `!=` are implemented, so the following works as expected:
 
 ```cpp
-void doGuidStuff(GuidGenerator generator)
+void doGuidStuff()
 {
-    auto guid1 = generator.newGuid();
-    auto guid2 = generator.newGuid();
+    auto guid1 = xg::newGuid();
+    auto guid2 = xg::newGuid();
 
     auto guidsAreEqual = guid1 == guid2;
     auto guidsAreNotEqual = guid1 != guid2;
