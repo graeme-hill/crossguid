@@ -245,21 +245,10 @@ Guid::Guid(const std::string &fromString)
 Guid::Guid() : _bytes{ {0} }
 { }
 
-// copy constructor
-Guid::Guid(const Guid &other) : _bytes(other._bytes)
-{ }
-
 // set all bytes to zero
 void Guid::zeroify()
 {
 	std::fill(_bytes.begin(), _bytes.end(), static_cast<unsigned char>(0));
-}
-
-// overload assignment operator
-Guid &Guid::operator=(const Guid &other)
-{
-	Guid(other).swap(*this);
-	return *this;
 }
 
 // overload equality operator
@@ -408,7 +397,7 @@ END_XG_NAMESPACE
 namespace std
 {
 	template <>
-	void swap(xg::Guid &lhs, xg::Guid &rhs)
+	void swap(xg::Guid &lhs, xg::Guid &rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}
