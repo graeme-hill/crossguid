@@ -96,6 +96,22 @@ int test(std::ostream &outStream)
 		failed++;
 	}
 
+	{
+		std::unordered_map<xg::Guid, int> m = {{s1, 1}, {s2, 2}};
+		auto it1 = m.find(s1);
+		auto it2 = m.find(s2);
+		if(!( it1 !=  m.end() && it1->first == s1 && it1->second == 1 && it2 !=  m.end() && it2->first == s2 && it2->second == 2))
+		{
+			outStream << "FAIL - map/hash failed!" << std::endl;
+			failed++;
+		}
+		auto it3 = m.find(s3);
+		if(it3 != m.end())
+		{
+			outStream << "FAIL - map/hash failed!" << std::endl;
+			failed++;
+		}
+	}
 	std::array<unsigned char, 16> bytes =
 	{{
 		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
