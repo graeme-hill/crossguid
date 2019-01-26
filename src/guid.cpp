@@ -198,7 +198,7 @@ unsigned char hexPairToChar(char a, char b)
 }
 
 // create a guid from string
-Guid::Guid(const std::string_view fromString)
+Guid::Guid(std::string_view fromString)
 {
 	char charOne = '\0';
 	char charTwo = '\0';
