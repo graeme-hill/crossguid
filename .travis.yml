@@ -5,17 +5,19 @@ dist: trusty
 matrix:
   include:
 
-  - os: linux
-    addons: &gcc8
+    - os: linux
+      addons:
         apt:
-          packages:
-            - g++-8
           sources:
             - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
-  - os: osx
-    osx_image: xcode9.2
-    compiler: clang
+    - os: osx
+      osx_image: xcode9.2
+      compiler: clang
 
 before_install:
    # Workaround for Travis CI macOS bug (https://github.com/travis-ci/travis-ci/issues/6307)
