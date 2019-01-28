@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <iostream>
 #include <array>
 #include <sstream>
-#include <string>
+#include <string_view>
 #include <utility>
 #include <iomanip>
 
@@ -49,9 +49,10 @@ BEGIN_XG_NAMESPACE
 class Guid
 {
 public:
-	Guid(const std::array<unsigned char, 16> &bytes);
-	Guid(const unsigned char *bytes);
-	Guid(const std::string &fromString);
+	explicit Guid(const std::array<unsigned char, 16> &bytes);
+	explicit Guid(std::array<unsigned char, 16> &&bytes);
+
+	explicit Guid(std::string_view fromString);
 	Guid();
 	
 	Guid(const Guid &other) = default;
@@ -102,6 +103,28 @@ void initJni(JNIEnv *env);
 Guid newGuid(JNIEnv *env);
 #endif
 
+namespace details
+{
+	template <typename...> struct hash;
+
+	template<typename T> 
+	struct hash<T> : public std::hash<T>
+	{
+		using std::hash<T>::hash;
+	};
+
+
+	template <typename T, typename... Rest>
+	struct hash<T, Rest...>
+	{
+		inline std::size_t operator()(const T& v, const Rest&... rest) {
+			std::size_t seed = hash<Rest...>{}(rest...);
+			seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+			return seed;
+		}
+	};
+}
+
 END_XG_NAMESPACE
 
 namespace std
@@ -117,13 +140,10 @@ namespace std
 	template <>
 	struct hash<xg::Guid>
 	{
-		typedef xg::Guid argument_type;
-		typedef std::size_t result_type;
-
-		result_type operator()(argument_type const &guid) const
+		std::size_t operator()(xg::Guid const &guid) const
 		{
-			std::hash<std::string> hasher;
-			return static_cast<result_type>(hasher(guid.str()));
+			const uint64_t* p = reinterpret_cast<const uint64_t*>(guid.bytes().data());
+			return xg::details::hash<uint64_t, uint64_t>{}(p[0], p[1]);
 		}
 	};
 }

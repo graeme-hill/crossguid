@@ -152,11 +152,9 @@ const std::array<unsigned char, 16>& Guid::bytes() const
 Guid::Guid(const std::array<unsigned char, 16> &bytes) : _bytes(bytes)
 { }
 
-// create a guid from array of bytes
-Guid::Guid(const unsigned char *bytes)
-{
-	std::copy(bytes, bytes + 16, std::begin(_bytes));
-}
+// create a guid from vector of bytes
+Guid::Guid(std::array<unsigned char, 16> &&bytes) : _bytes(std::move(bytes))
+{ }
 
 // converts a single hex char to a number (0 - 15)
 unsigned char hexDigitToChar(char ch)
@@ -200,7 +198,7 @@ unsigned char hexPairToChar(char a, char b)
 }
 
 // create a guid from string
-Guid::Guid(const std::string &fromString)
+Guid::Guid(std::string_view fromString)
 {
 	char charOne = '\0';
 	char charTwo = '\0';
@@ -274,9 +272,10 @@ void Guid::swap(Guid &other)
 #ifdef GUID_LIBUUID
 Guid newGuid()
 {
-	uuid_t id;
-	uuid_generate(id);
-	return id;
+	std::array<unsigned char, 16> data;
+	static_assert(std::is_same<unsigned char[16], uuid_t>::value, "Wrong type!");
+	uuid_generate(data.data());
+	return Guid{std::move(data)};
 }
 #endif
 
@@ -307,7 +306,7 @@ Guid newGuid()
 		bytes.byte14,
 		bytes.byte15
 	}};
-	return byteArray;
+	return Guid{std::move(byteArray)};
 }
 #endif
 
@@ -341,7 +340,7 @@ Guid newGuid()
 		(unsigned char)newId.Data4[7]
 	};
 
-	return bytes;
+	return Guid{std::move(bytes)};
 }
 #endif
 
@@ -380,7 +379,7 @@ Guid newGuid(JNIEnv *env)
 
 	env->DeleteLocalRef(javaUuid);
 
-	return bytes;
+	return Guid{std::move(bytes)};
 }
 
 Guid newGuid()

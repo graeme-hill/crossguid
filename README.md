@@ -31,34 +31,34 @@ is all in the `android/` subdirectory. If you have an emulator already running,
 then you can run the `android.sh` script in the root directory. It has the
 following requirements:
 
-* Android emulator is already running (or you have physical device connected).
-* You're using bash.
-* adb is in your path.
-* You have an Android sdk setup including `ANDROID_HOME` environment variable.
+- Android emulator is already running (or you have physical device connected).
+- You're using bash.
+- adb is in your path.
+- You have an Android sdk setup including `ANDROID_HOME` environment variable.
 
 ## Versions
 
 This is version 0.2 of CrossGuid. If you all already using CrossGuid and your code
 uses `GuidGenerator` then you are using version 0.1. Differences in version 0.2:
 
-* Put everything inside the namespace `xg` instead of using the global
-namespace.
-* Removed `GuidGenerator` class and replaced with the free function
-`xg::newGuid`. This is the way I originally wanted it to work but since Android
-is a special snowflake requiring state (`JNIEnv *`) I introduced the
-`GuidGenerator` class specifically so that there would be somewhere to store
-the `JNIEnv *` when running on Android. However, this basically meant
-complicating the library for the sake of one platform. In version 0.2 the goal is
-to design for the normal platforms and let Android be weird. In Android you just
-need to run `xg::initJni(JNIEnv *)` before you create any guids. The `JNIEnv *`
-is just stored as a global variable.
-* Added CMake build system. Instead of different scripts for each platform you
-can just run cmake and it should handle each platform (except Android which
-again is special).
-* Actual guid bytes are stored in `std::array<unsigned char, 16>` instead of
-`std::vector<unsigned char>`.
-* More error checking (like if you try to create a guid with invalid number of
-bytes).
+- Put everything inside the namespace `xg` instead of using the global
+  namespace.
+- Removed `GuidGenerator` class and replaced with the free function
+  `xg::newGuid`. This is the way I originally wanted it to work but since Android
+  is a special snowflake requiring state (`JNIEnv *`) I introduced the
+  `GuidGenerator` class specifically so that there would be somewhere to store
+  the `JNIEnv *` when running on Android. However, this basically meant
+  complicating the library for the sake of one platform. In version 0.2 the goal is
+  to design for the normal platforms and let Android be weird. In Android you just
+  need to run `xg::initJni(JNIEnv *)` before you create any guids. The `JNIEnv *`
+  is just stored as a global variable.
+- Added CMake build system. Instead of different scripts for each platform you
+  can just run cmake and it should handle each platform (except Android which
+  again is special).
+- Actual guid bytes are stored in `std::array<unsigned char, 16>` instead of
+  `std::vector<unsigned char>`.
+- More error checking (like if you try to create a guid with invalid number of
+  bytes).
 
 If you're happily using version 0.1 then there's not really any reason to
 change.
@@ -195,6 +195,10 @@ void doGuidStuff()
     auto guidsAreNotEqual = guid1 != guid2;
 }
 ```
+
+### Hashing guids
+
+Guids can be used directly in containers requireing `std::hash` such as `std::map,`std::unordered_map` etc.
 
 ## License
 
