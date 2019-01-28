@@ -6,27 +6,15 @@ matrix:
   include:
 
   - os: linux
-    addons: &gcc7
+    addons: &gcc8
         apt:
           packages:
-            - g++-7
-          sources:
-            - ubuntu-toolchain-r-test
-
-  - os: linux
-    addons: &gcc7
-        apt:
-          packages:
-            - g++-7
+            - g++-8
           sources:
             - ubuntu-toolchain-r-test
 
   - os: osx
     osx_image: xcode9.2
-    compiler: clang
-    
-  - os: osx
-    osx_image: xcode8.3
     compiler: clang
 
 before_install:
