@@ -15,6 +15,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_library(crossguid ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
+set_property(TARGET crossguid PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_include_directories(crossguid PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
