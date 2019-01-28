@@ -6,18 +6,18 @@ matrix:
   include:
 
   - os: linux
-    addons: &gcc5
+    addons: &gcc7
         apt:
           packages:
-            - g++-5
+            - g++-7
           sources:
             - ubuntu-toolchain-r-test
 
   - os: linux
-    addons: &gcc6
+    addons: &gcc7
         apt:
           packages:
-            - g++-6
+            - g++-7
           sources:
             - ubuntu-toolchain-r-test
 
