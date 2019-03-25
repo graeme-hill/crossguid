@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(CrossGuid)
+project(CrossGuid VERSION 0.2.3)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -49,11 +49,10 @@ elseif(MSVC)
 endif()
 target_compile_options(crossguid PRIVATE ${WARNINGS})
 
-# Properties
-# for a version number add
-# VERSION ${CROSSGUID_VERSION_STRING} SOVERSION ${CROSSGUID_VERSION_STRING}
 set_target_properties(crossguid
 					  PROPERTIES
+					  VERSION ${PROJECT_VERSION}
+					  SOVERSION ${PROJECT_VERSION_MAJOR}
 					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
