@@ -113,16 +113,16 @@ bool Guid::isValid() const
 // convert to string using std::snprintf() and std::string
 std::string Guid::str() const
 {
-	constexpr size_t guidSize = sizeof("01234567-0123-0123-0123-0123456789ab");
-	char out[guidSize];
-	snprintf(out, guidSize, "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+	constexpr size_t guidBufferSize = sizeof("01234567-0123-0123-0123-0123456789ab");
+	char buffer[guidBufferSize];
+	snprintf(buffer, guidBufferSize, "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
 		_bytes[0], _bytes[1], _bytes[2], _bytes[3],
 		_bytes[4], _bytes[5],
 		_bytes[6], _bytes[7],
 		_bytes[8], _bytes[9],
 		_bytes[10], _bytes[11], _bytes[12], _bytes[13], _bytes[14], _bytes[15]);
 
-	return std::string(out, guidSize - 1);
+	return std::string(buffer, guidBufferSize - 1);
 }
 
 // conversion operator for std::string
