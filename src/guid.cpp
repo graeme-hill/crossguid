@@ -146,7 +146,7 @@ Guid::Guid(std::array<unsigned char, 16> &&bytes) : _bytes(std::move(bytes))
 { }
 
 // converts a single hex char to a number (0 - 15)
-unsigned char hexDigitToChar(char ch)
+static unsigned char hexDigitToChar(char ch)
 {
 	// 0-9
 	if (ch > 47 && ch < 58)
@@ -163,7 +163,7 @@ unsigned char hexDigitToChar(char ch)
 	return 0;
 }
 
-bool isValidHexChar(char ch)
+static bool isValidHexChar(char ch)
 {
 	// 0-9
 	if (ch > 47 && ch < 58)
@@ -181,7 +181,7 @@ bool isValidHexChar(char ch)
 }
 
 // converts the two hexadecimal characters to an unsigned char (a byte)
-unsigned char hexPairToChar(char a, char b)
+static unsigned char hexPairToChar(char a, char b)
 {
 	return hexDigitToChar(a) * 16 + hexDigitToChar(b);
 }
