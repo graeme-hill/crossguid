@@ -304,7 +304,7 @@ Guid newGuid()
 Guid newGuid()
 {
 	GUID newId;
-	CoCreateGuid(&newId);
+	(void)CoCreateGuid(&newId);
 
 	std::array<unsigned char, 16> bytes =
 	{
