@@ -74,6 +74,9 @@ cmake ..
 make install
 ```
 
+The library can also be build with `c++17` by using `-DCMAKE_CXX_STANDARD=17` 
+which enables `std::string_view` support.
+
 ## Running tests
 
 After compiling as described above you should get two files: `libcrossguid.a` (the

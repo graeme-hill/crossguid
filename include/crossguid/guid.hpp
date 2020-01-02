@@ -49,12 +49,17 @@ BEGIN_XG_NAMESPACE
 class Guid
 {
 public:
+	Guid();
+	
 	explicit Guid(const std::array<unsigned char, 16> &bytes);
 	explicit Guid(std::array<unsigned char, 16> &&bytes);
 
+#if __cplusplus >= 201703L
 	explicit Guid(std::string_view fromString);
-	Guid();
-	
+#else
+	explicit Guid(std::string fromString);
+#endif
+
 	Guid(const Guid &other) = default;
 	Guid &operator=(const Guid &other) = default;
 	Guid(Guid &&other) = default;
