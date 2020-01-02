@@ -198,7 +198,11 @@ unsigned char hexPairToChar(char a, char b)
 }
 
 // create a guid from string
+#if __cplusplus >= 201703L
 Guid::Guid(std::string_view fromString)
+#else
+Guid::Guid(std::string fromString)
+#endif
 {
 	char charOne = '\0';
 	char charTwo = '\0';
