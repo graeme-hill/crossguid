@@ -32,8 +32,8 @@ THE SOFTWARE.
 #include <array>
 #include <iomanip>
 #include <ostream>
-#include <sstream>
 #include <string_view>
+#include <tuple>
 
 #define BEGIN_XG_NAMESPACE namespace xg {
 #define END_XG_NAMESPACE }
@@ -87,12 +87,7 @@ public:
 	constexpr bool operator!=(const Guid &other) const { return !(*this == other); }
 
 	// convert to string
-	std::string str() const
-	{
-		std::stringstream stream;
-		stream << *this;
-		return stream.str();
-	}
+	inline std::string str() const;
 	// conversion operator for std::string
 	operator std::string() const { return str(); }
 	// Access underlying bytes
@@ -166,47 +161,60 @@ namespace details
 			return seed;
 		}
 	};
-}
 
-// converts a single hex char to a number (0 - 15)
-constexpr unsigned char hexDigitToChar(char ch)
-{
-	// 0-9
-	if (ch > 47 && ch < 58)
-		return ch - 48;
+	// converts a single hex char to a number (0 - 15)
+	constexpr unsigned char hexDigitToChar(char ch)
+	{
+		// 0-9
+		if (ch > 47 && ch < 58)
+			return ch - 48;
 
-	// a-f
-	if (ch > 96 && ch < 103)
-		return ch - 87;
+		// a-f
+		if (ch > 96 && ch < 103)
+			return ch - 87;
 
-	// A-F
-	if (ch > 64 && ch < 71)
-		return ch - 55;
+		// A-F
+		if (ch > 64 && ch < 71)
+			return ch - 55;
 
-	return 0;
-}
+		return 0;
+	}
 
-constexpr bool isValidHexChar(char ch)
-{
-	// 0-9
-	if (ch > 47 && ch < 58)
-		return true;
+	constexpr bool isValidHexChar(char ch)
+	{
+		// 0-9
+		if (ch > 47 && ch < 58)
+			return true;
 
-	// a-f
-	if (ch > 96 && ch < 103)
-		return true;
+		// a-f
+		if (ch > 96 && ch < 103)
+			return true;
 
-	// A-F
-	if (ch > 64 && ch < 71)
-		return true;
+		// A-F
+		if (ch > 64 && ch < 71)
+			return true;
 
-	return false;
-}
+		return false;
+	}
 
-// converts the two hexadecimal characters to an unsigned char (a byte)
-constexpr unsigned char hexPairToChar(char a, char b)
-{
-	return hexDigitToChar(a) * 16 + hexDigitToChar(b);
+	// converts the two hexadecimal characters to an unsigned char (a byte)
+	constexpr unsigned char hexPairToChar(char a, char b)
+	{
+		return hexDigitToChar(a) * 16 + hexDigitToChar(b);
+	}
+
+	constexpr char charToHexDigit(unsigned char a)
+	{
+		if (a < 10) return '0' + a;
+		if (a < 16) return 'a' + (a - 10);
+		// unreachable
+		return '!';
+	}
+
+	constexpr std::tuple<char, char> charToHexPair(unsigned char a)
+	{
+		return {charToHexDigit(a / 16), charToHexDigit(a % 16)};
+	}
 }
 
 constexpr Guid::Guid(std::string_view fromString) {
@@ -220,7 +228,7 @@ constexpr Guid::Guid(std::string_view fromString) {
 		if (ch == '-')
 			continue;
 
-		if (nextByte >= 16 || !isValidHexChar(ch))
+		if (nextByte >= 16 || !details::isValidHexChar(ch))
 		{
 			// Invalid string so bail
 			zeroify();
@@ -235,7 +243,7 @@ constexpr Guid::Guid(std::string_view fromString) {
 		else
 		{
 			charTwo = ch;
-			auto byte = hexPairToChar(charOne, charTwo);
+			auto byte = details::hexPairToChar(charOne, charTwo);
 			_bytes[nextByte++] = byte;
 			lookingForFirstChar = true;
 		}
@@ -247,6 +255,19 @@ constexpr Guid::Guid(std::string_view fromString) {
 		zeroify();
 		return;
 	}
+}
+
+inline std::string Guid::str() const {
+	std::string buffer;
+	buffer.resize(36, '\0');
+	std::size_t index = 0;
+	for (const unsigned char byte : _bytes) {
+		std::tie(buffer[index], buffer[index + 1]) = details::charToHexPair(byte);
+		index += 2;
+		if (index == 8 || index == 13 || index == 18 || index == 23)
+			buffer[index++] = '-';
+	}
+	return buffer;
 }
 
 END_XG_NAMESPACE
