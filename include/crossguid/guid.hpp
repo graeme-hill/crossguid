@@ -29,12 +29,11 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
-#include <iostream>
 #include <array>
+#include <iomanip>
+#include <ostream>
 #include <sstream>
 #include <string_view>
-#include <utility>
-#include <iomanip>
 
 #define BEGIN_XG_NAMESPACE namespace xg {
 #define END_XG_NAMESPACE }
