@@ -49,35 +49,70 @@ BEGIN_XG_NAMESPACE
 class Guid
 {
 public:
-	explicit Guid(const std::array<unsigned char, 16> &bytes);
-	explicit Guid(std::array<unsigned char, 16> &&bytes);
+	// create a guid from vector of bytes
+	explicit constexpr Guid(const std::array<unsigned char, 16> &bytes)
+		: _bytes{ bytes } {}
+	// create a guid from vector of bytes
+	explicit constexpr Guid(std::array<unsigned char, 16> &&bytes)
+		: _bytes{ std::move(bytes) } {}
 
-	explicit Guid(std::string_view fromString);
-	Guid();
-	
-	Guid(const Guid &other) = default;
-	Guid &operator=(const Guid &other) = default;
-	Guid(Guid &&other) = default;
-	Guid &operator=(Guid &&other) = default;
+	// create a guid from string
+	explicit constexpr Guid(std::string_view fromString);
 
-	bool operator==(const Guid &other) const;
-	bool operator!=(const Guid &other) const;
+	// create empty guid
+	constexpr Guid()
+		: _bytes{ {0} } {}
 
+	constexpr Guid(const Guid &other) = default;
+	constexpr Guid &operator=(const Guid &other) = default;
+	constexpr Guid(Guid &&other) = default;
+	constexpr Guid &operator=(Guid &&other) = default;
+
+	// overload equality operator
+	constexpr bool operator==(const Guid &other) const
+	{
+		// Hopefully the optimizer can be smart about this :))))
+		for (std::size_t i = 0; i < _bytes.size(); i += 1) {
+			if (_bytes[i] != other._bytes[i])
+				return false;
+		}
+		return true;
+	}
+	// overload inequality operator
+	constexpr bool operator!=(const Guid &other) const { return !(*this == other); }
+
+	// convert to string using std::snprintf() and std::string
 	std::string str() const;
-	operator std::string() const;
-	const std::array<unsigned char, 16>& bytes() const;
-	void swap(Guid &other);
-	bool isValid() const;
+	// conversion operator for std::string
+	operator std::string() const { return str(); }
+	// Access underlying bytes
+	constexpr const std::array<unsigned char, 16>& bytes() const { return _bytes; }
+	// member swap function
+	void swap(Guid &other) { _bytes.swap(other._bytes); }
+	constexpr bool isValid() const
+	{
+		Guid empty;
+		return *this != empty;
+	}
 
 private:
-	void zeroify();
+	// set all bytes to zero
+	constexpr void zeroify()
+	{
+		for (std::size_t i = 0; i < _bytes.size(); i += 1) {
+			_bytes[i] = 0;
+		}
+	}
 
 	// actual data
-	std::array<unsigned char, 16> _bytes;
+	std::array<unsigned char, 16> _bytes{ {0} };
 
 	// make the << operator a friend so it can access _bytes
 	friend std::ostream &operator<<(std::ostream &s, const Guid &guid);
-	friend bool operator<(const Guid &lhs, const Guid &rhs);
+	friend bool operator<(const Guid &lhs, const Guid &rhs)
+	{
+		return lhs.bytes() <	rhs.bytes();
+	}
 };
 
 Guid newGuid();
@@ -125,15 +160,91 @@ namespace details
 	};
 }
 
+// converts a single hex char to a number (0 - 15)
+constexpr unsigned char hexDigitToChar(char ch)
+{
+	// 0-9
+	if (ch > 47 && ch < 58)
+		return ch - 48;
+
+	// a-f
+	if (ch > 96 && ch < 103)
+		return ch - 87;
+
+	// A-F
+	if (ch > 64 && ch < 71)
+		return ch - 55;
+
+	return 0;
+}
+
+constexpr bool isValidHexChar(char ch)
+{
+	// 0-9
+	if (ch > 47 && ch < 58)
+		return true;
+
+	// a-f
+	if (ch > 96 && ch < 103)
+		return true;
+
+	// A-F
+	if (ch > 64 && ch < 71)
+		return true;
+
+	return false;
+}
+
+// converts the two hexadecimal characters to an unsigned char (a byte)
+constexpr unsigned char hexPairToChar(char a, char b)
+{
+	return hexDigitToChar(a) * 16 + hexDigitToChar(b);
+}
+
+constexpr Guid::Guid(std::string_view fromString) {
+	char charOne = '\0';
+	char charTwo = '\0';
+	bool lookingForFirstChar = true;
+	unsigned nextByte = 0;
+
+	for (const char &ch : fromString)
+	{
+		if (ch == '-')
+			continue;
+
+		if (nextByte >= 16 || !isValidHexChar(ch))
+		{
+			// Invalid string so bail
+			zeroify();
+			return;
+		}
+
+		if (lookingForFirstChar)
+		{
+			charOne = ch;
+			lookingForFirstChar = false;
+		}
+		else
+		{
+			charTwo = ch;
+			auto byte = hexPairToChar(charOne, charTwo);
+			_bytes[nextByte++] = byte;
+			lookingForFirstChar = true;
+		}
+	}
+
+	// if there were fewer than 16 bytes in the string then guid is bad
+	if (nextByte < 16)
+	{
+		zeroify();
+		return;
+	}
+}
+
 END_XG_NAMESPACE
 
 namespace std
 {
-	// Template specialization for std::swap<Guid>() --
-	// See guid.cpp for the function definition
-	template <>
-	void swap(xg::Guid &guid0, xg::Guid &guid1) noexcept;
-
 	// Specialization for std::hash<Guid> -- this implementation
 	// uses std::hash<std::string> on the stringification of the guid
 	// to calculate the hash
