@@ -86,7 +86,7 @@ public:
 	// overload inequality operator
 	constexpr bool operator!=(const Guid &other) const { return !(*this == other); }
 
-	// convert to string using std::snprintf() and std::string
+	// convert to string
 	std::string str() const
 	{
 		std::stringstream stream;
