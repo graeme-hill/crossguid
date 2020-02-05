@@ -29,7 +29,6 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
-#include <functional>
 #include <iostream>
 #include <array>
 #include <sstream>
@@ -39,6 +38,13 @@ THE SOFTWARE.
 
 #define BEGIN_XG_NAMESPACE namespace xg {
 #define END_XG_NAMESPACE }
+
+// forward decl
+BEGIN_XG_NAMESPACE
+class Guid;
+END_XG_NAMESPACE
+
+inline std::ostream &operator<<(std::ostream &s, const xg::Guid &guid);
 
 BEGIN_XG_NAMESPACE
 
@@ -82,7 +88,12 @@ public:
 	constexpr bool operator!=(const Guid &other) const { return !(*this == other); }
 
 	// convert to string using std::snprintf() and std::string
-	std::string str() const;
+	std::string str() const
+	{
+		std::stringstream stream;
+		stream << *this;
+		return stream.str();
+	}
 	// conversion operator for std::string
 	operator std::string() const { return str(); }
 	// Access underlying bytes
@@ -107,8 +118,6 @@ private:
 	// actual data
 	std::array<unsigned char, 16> _bytes{ {0} };
 
-	// make the << operator a friend so it can access _bytes
-	friend std::ostream &operator<<(std::ostream &s, const Guid &guid);
 	friend bool operator<(const Guid &lhs, const Guid &rhs)
 	{
 		return lhs.bytes() <	rhs.bytes();
@@ -257,4 +266,34 @@ namespace std
 			return xg::details::hash<uint64_t, uint64_t>{}(p[0], p[1]);
 		}
 	};
+}
+
+// overload << so that it's easy to convert to a string
+inline std::ostream &operator<<(std::ostream &s, const xg::Guid &guid)
+{
+	auto& bytes = guid.bytes();
+	std::ios_base::fmtflags f(s.flags()); // politely don't leave the ostream in hex mode
+	s << std::hex << std::setfill('0')
+		<< std::setw(2) << (int)bytes[0]
+		<< std::setw(2) << (int)bytes[1]
+		<< std::setw(2) << (int)bytes[2]
+		<< std::setw(2) << (int)bytes[3]
+		<< "-"
+		<< std::setw(2) << (int)bytes[4]
+		<< std::setw(2) << (int)bytes[5]
+		<< "-"
+		<< std::setw(2) << (int)bytes[6]
+		<< std::setw(2) << (int)bytes[7]
+		<< "-"
+		<< std::setw(2) << (int)bytes[8]
+		<< std::setw(2) << (int)bytes[9]
+		<< "-"
+		<< std::setw(2) << (int)bytes[10]
+		<< std::setw(2) << (int)bytes[11]
+		<< std::setw(2) << (int)bytes[12]
+		<< std::setw(2) << (int)bytes[13]
+		<< std::setw(2) << (int)bytes[14]
+		<< std::setw(2) << (int)bytes[15];
+	s.flags(f);
+	return s;
 }
