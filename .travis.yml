@@ -13,16 +13,13 @@ matrix:
           packages:
             - g++-8
       env:
-        - MATRIX_EVAL="export CC=gcc-8 && export CXX=g++-8"
+        - CC=gcc-8 CXX=g++-8
 
     - os: osx
       osx_image: xcode9.2
       compiler: clang
 
 before_install:
-  # Make sure we set correct env for platform
-  - eval "$(MATRIX_EVAL)"
-
   # Workaround for Travis CI macOS bug (https://github.com/travis-ci/travis-ci/issues/6307)
   # See https://github.com/searchivarius/nmslib/pull/259
   - |
