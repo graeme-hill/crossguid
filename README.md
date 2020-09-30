@@ -7,8 +7,8 @@ determined by your platform:
 
 ## Linux
 
-On linux you can use `libuuid` which is pretty standard. On distros like Ubuntu
-it is available by default but to use it you need the header files so you have
+On linux you can use `libuuid` which is pretty standard. On distros like Ubuntu,
+it is available by default but to use it you need the header files. So you have
 to do:
 
     sudo apt-get install uuid-dev
@@ -27,7 +27,7 @@ generate a Visual Studio project if that's your thing.
 
 The Android version uses a handle to a `JNIEnv` object to invoke the
 `randomUUID()` function on `java.util.UUID` from C++. The Android specific code
-is all in the `android/` subdirectory. If you have an emulator already running,
+is all in the `android/` subdirectory. If you have an emulator, that is already running,
 then you can run the `android.sh` script in the root directory. It has the
 following requirements:
 
@@ -60,12 +60,12 @@ uses `GuidGenerator` then you are using version 0.1. Differences in version 0.2:
 - More error checking (like if you try to create a guid with invalid number of
   bytes).
 
-If you're happily using version 0.1 then there's not really any reason to
+If you're happily using version 0.1 then there isn't really any reason to
 change.
 
 ## Compiling
 
-Just do the normal cmake thing:
+Just do the normal CMake thing:
 
 ```
 mkdir build
