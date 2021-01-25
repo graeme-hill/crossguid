@@ -34,7 +34,7 @@ jobs:
           rm -rf build
 
       - name: configure
-        run: cmake -Stest -Bbuild -DTEST_INSTALLED_VERSION=1
+        run: cmake -Stest -Bbuild -DTEST_INSTALLED_VERSION=1 -DCMAKE_MODULE_PATH=$(pwd)/cmake
 
       - name: build
         run: cmake --build build --config Debug -j4
