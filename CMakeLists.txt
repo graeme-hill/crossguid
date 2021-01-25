@@ -44,7 +44,7 @@ elseif(ANDROID)
     target_compile_definitions(CrossGuid PUBLIC GUID_ANDROID)
 else()
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
-    find_package(Libuuid REQUIRED)
+    find_package(LibUUID REQUIRED)
     if (NOT LIBUUID_FOUND)
         message(FATAL_ERROR
             "You might need to run 'sudo apt-get install uuid-dev' or similar")
