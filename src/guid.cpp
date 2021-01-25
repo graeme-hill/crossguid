@@ -396,7 +396,7 @@ END_XG_NAMESPACE
 namespace std
 {
 	template <>
-	void swap(xg::Guid &lhs, xg::Guid &rhs) noexcept
+	[[maybe_unused]] void swap(xg::Guid &lhs, xg::Guid &rhs) noexcept
 	{
 		lhs.swap(rhs);
 	}
