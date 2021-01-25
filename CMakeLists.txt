@@ -49,8 +49,8 @@ else()
         message(FATAL_ERROR
             "You might need to run 'sudo apt-get install uuid-dev' or similar")
     endif()
-    set(CrossGuid_dependencies ${LIBUUID_LIBRARY})
-    target_include_directories(CrossGuid PRIVATE ${LIBUUID_INCLUDE_DIR})
+    set(CrossGuid_dependencies ${LibUUID_LIBRARIES})
+    target_include_directories(CrossGuid PRIVATE ${LibUUID_INCLUDE_DIRS})
     target_compile_definitions(CrossGuid PRIVATE GUID_LIBUUID)
 endif()
 
