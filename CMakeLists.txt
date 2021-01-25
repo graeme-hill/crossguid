@@ -29,13 +29,15 @@ set_property(TARGET CrossGuid PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_include_directories(CrossGuid PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${PROJECT_NAME}-${PROJECT_VERSION}>)
+    $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>)
+
+set(CrossGuid_dependencies "")
 
 if(WIN32)
     target_compile_definitions(CrossGuid PRIVATE GUID_WINDOWS)
 elseif(APPLE)
     find_library(CFLIB CoreFoundation)
-    target_link_libraries(CrossGuid ${CFLIB})
+    set(CrossGuid_dependencies ${CFLIB})
     target_compile_definitions(CrossGuid PRIVATE GUID_CFUUID)
 elseif(ANDROID)
     # GUID_ANDROID is used in the headers, so make PUBLIC
@@ -47,10 +49,12 @@ else()
         message(FATAL_ERROR
             "You might need to run 'sudo apt-get install uuid-dev' or similar")
     endif()
+    set(CrossGuid_dependencies ${LIBUUID_LIBRARY})
     target_include_directories(CrossGuid PRIVATE ${LIBUUID_INCLUDE_DIR})
-    target_link_libraries(CrossGuid ${LIBUUID_LIBRARY})
     target_compile_definitions(CrossGuid PRIVATE GUID_LIBUUID)
 endif()
+
+target_link_libraries(CrossGuid ${CrossGuid_dependencies})
 
 set_target_properties(CrossGuid
 					  PROPERTIES
@@ -66,5 +70,5 @@ packageProject(
   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
   INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
-  DEPENDENCIES ""
+  DEPENDENCIES "${CrossGuid_dependencies}"
 )
