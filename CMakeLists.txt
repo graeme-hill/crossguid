@@ -38,6 +38,7 @@ if(WIN32)
 elseif(APPLE)
     find_library(CFLIB CoreFoundation)
     set(CrossGuid_dependencies ${CFLIB})
+    target_link_libraries(CrossGuid ${CrossGuid_dependencies})
     target_compile_definitions(CrossGuid PRIVATE GUID_CFUUID)
 elseif(ANDROID)
     # GUID_ANDROID is used in the headers, so make PUBLIC
@@ -49,12 +50,11 @@ else()
         message(FATAL_ERROR
             "You might need to run 'sudo apt-get install uuid-dev' or similar")
     endif()
-    set(CrossGuid_dependencies ${LibUUID_LIBRARIES})
+    set(CrossGuid_dependencies LibUUID)
+    target_link_libraries(CrossGuid ${LibUUID_LIBRARIES})
     target_include_directories(CrossGuid PRIVATE ${LibUUID_INCLUDE_DIRS})
     target_compile_definitions(CrossGuid PRIVATE GUID_LIBUUID)
 endif()
-
-target_link_libraries(CrossGuid ${CrossGuid_dependencies})
 
 set_target_properties(CrossGuid
 					  PROPERTIES
