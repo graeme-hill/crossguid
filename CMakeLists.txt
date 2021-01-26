@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(CrossGuid VERSION 0.2.3)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+# ---- add dependencies via CPM ----
+
+include(cmake/CPM.cmake)
+
+CPMAddPackage(
+  NAME PackageProject.cmake
+  GITHUB_REPOSITORY TheLartians/PackageProject.cmake
+  VERSION 1.4
+)
+
+# ---- create target ----
 
 option(CROSSGUID_TESTS "Build test runner" ON)
 
@@ -14,84 +24,51 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-add_library(crossguid ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
-set_property(TARGET crossguid PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(crossguid PUBLIC
+add_library(CrossGuid ${CMAKE_CURRENT_SOURCE_DIR}/src/guid.cpp)
+set_property(TARGET CrossGuid PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+target_include_directories(CrossGuid PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>)
+
+set(CrossGuid_dependencies "")
 
 if(WIN32)
-    target_compile_definitions(crossguid PRIVATE GUID_WINDOWS)
+    target_compile_definitions(CrossGuid PRIVATE GUID_WINDOWS)
 elseif(APPLE)
     find_library(CFLIB CoreFoundation)
-    target_link_libraries(crossguid ${CFLIB})
-    target_compile_definitions(crossguid PRIVATE GUID_CFUUID)
+    set(CrossGuid_dependencies ${CFLIB})
+    target_link_libraries(CrossGuid ${CrossGuid_dependencies})
+    target_compile_definitions(CrossGuid PRIVATE GUID_CFUUID)
 elseif(ANDROID)
     # GUID_ANDROID is used in the headers, so make PUBLIC
-    target_compile_definitions(crossguid PUBLIC GUID_ANDROID)
+    target_compile_definitions(CrossGuid PUBLIC GUID_ANDROID)
 else()
-    find_package(Libuuid REQUIRED)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+    find_package(LibUUID REQUIRED)
     if (NOT LIBUUID_FOUND)
         message(FATAL_ERROR
             "You might need to run 'sudo apt-get install uuid-dev' or similar")
     endif()
-    target_include_directories(crossguid PRIVATE ${LIBUUID_INCLUDE_DIR})
-    target_link_libraries(crossguid ${LIBUUID_LIBRARY})
-    target_compile_definitions(crossguid PRIVATE GUID_LIBUUID)
+    set(CrossGuid_dependencies LibUUID)
+    target_link_libraries(CrossGuid ${LibUUID_LIBRARIES})
+    target_include_directories(CrossGuid PRIVATE ${LibUUID_INCLUDE_DIRS})
+    target_compile_definitions(CrossGuid PRIVATE GUID_LIBUUID)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(WARNINGS "-Werror" "-Wall")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(WARNINGS "-Werror" "-Wall")
-elseif(MSVC)
-    set(WARNINGS "/WX" "/W4")
-endif()
-target_compile_options(crossguid PRIVATE ${WARNINGS})
-
-set_target_properties(crossguid
+set_target_properties(CrossGuid
 					  PROPERTIES
 					  VERSION ${PROJECT_VERSION}
 					  SOVERSION ${PROJECT_VERSION_MAJOR}
 					  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
-if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-	include(GNUInstallDirs)
-
-	set(CROSSGUID_INC_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
-	set(CROSSGUID_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
-	set(CROSSGUID_LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
-	set(CROSSGUID_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
-	set(CROSSGUID_FRAMEWORK_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
-
-	set(CROSSGUID_CMAKE_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid/cmake")
-	set(CROSSGUID_ADDITIONAL_FILES_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/crossguid")
-
-	# Install target
-	install(TARGETS crossguid EXPORT crossguidTargets
-		RUNTIME       DESTINATION ${CROSSGUID_RUNTIME_INSTALL_DIR}
-		LIBRARY       DESTINATION ${CROSSGUID_LIBRARY_INSTALL_DIR}
-		ARCHIVE       DESTINATION ${CROSSGUID_ARCHIVE_INSTALL_DIR}
-		FRAMEWORK     DESTINATION ${CROSSGUID_FRAMEWORK_INSTALL_DIR})
-
-	# Install headers
-	install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-		DESTINATION ${CROSSGUID_INC_INSTALL_DIR})
-
-	# Make cmake config files for all targets
-	install(EXPORT  crossguidTargets
-		DESTINATION ${CROSSGUID_CMAKE_CONFIG_INSTALL_DIR}
-		FILE crossguid-config.cmake)
-
-	# Install readme and license
-	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE" "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-		DESTINATION ${CROSSGUID_ADDITIONAL_FILES_INSTALL_DIR})
-
-	configure_file(crossguid.pc.in ${PROJECT_BINARY_DIR}/crossguid.pc @ONLY)
-	install(FILES ${PROJECT_BINARY_DIR}/crossguid.pc DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig)
-endif()
-
-if (CROSSGUID_TESTS)
-    add_executable(crossguid-test test/TestMain.cpp test/Test.cpp)
-    target_link_libraries(crossguid-test crossguid)
-endif()
+packageProject(
+  NAME ${PROJECT_NAME}
+  VERSION ${PROJECT_VERSION}
+  NAMESPACE ${PROJECT_NAME}
+  BINARY_DIR ${PROJECT_BINARY_DIR}
+  INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+  INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
+  VERSION_HEADER "${VERSION_HEADER_LOCATION}"
+  DEPENDENCIES "${CrossGuid_dependencies}"
+)
