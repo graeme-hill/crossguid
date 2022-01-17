@@ -61,7 +61,7 @@ script:
     cd "${CHECKOUT_PATH}"
     mkdir build
     cd build
-    cmake .. -DCMAKE_BUILD_TYPE="Debug"
+    cmake .. -DCMAKE_BUILD_TYPE="Debug" -DTREAT_WARNINGS_AS_ERRORS=ON
     sudo make install
   #######################################################################################
   # Run the tests
