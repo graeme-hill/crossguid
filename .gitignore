@@ -5,3 +5,5 @@ build/
 android/libs/
 android/obj/
 cmake_build
+cmake-build-*/
+.idea/
