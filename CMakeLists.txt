@@ -9,3 +9,9 @@ project(CrossGuid
 		)
 
 add_subdirectory(src)
+
+install(
+		EXPORT CrossGuid
+		NAMESPACE CrossGuid::
+		DESTINATION lib
+)
