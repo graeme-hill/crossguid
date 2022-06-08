@@ -26,3 +26,5 @@ target_link_libraries(CrossGuid_Tests
 
 gtest_discover_tests(CrossGuid_Tests
   EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/")
+  
+  
