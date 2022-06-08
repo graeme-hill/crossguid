@@ -8,13 +8,13 @@ on:
 
 jobs:
   CI:
-    name: ${{ matrix.name }} - ${{ matrix.configuration }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.cfg.name }} - ${{ matrix.cfg.configuration }}
+    runs-on: ${{ matrix.cfg.os }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { os: windows-2022, configuration: Debug, name: 'Windows Server 2022 (VS 2022)' }
+        cfg:
+          - { os: 'windows-2022', configuration: Debug, name: 'Windows Server 2022 (VS 2022)' }
           - { os: windows-2022, configuration: Release, name: 'Windows Server 2022 (VS 2022)' }
           - { os: windows-2019, configuration: Debug, name: 'Windows Server 2019 (VS 2019)' }
           - { os: windows-2019, configuration: Release, name: 'Windows Server 2019 (VS 2019)' }
@@ -38,25 +38,25 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Change Compiler
-        if: "!contains('', matrix.c)"
+        if: "!contains('', matrix.cfg.c)"
         run: |
-          export CC="${{ matrix.c }}"
-          export CXX="${{ matrix.cpp }}"
+          export CC="${{ matrix.cfg.c }}"
+          export CXX="${{ matrix.cfg.cpp }}"
 
       - name: Configure CrossGuid
         id: config
         run: cmake -S . -B build
 
       - uses: novelrt/setup-cpp@v1
-      - name: Build CrossGuid - ${{ matrix.configuration }}
+      - name: Build CrossGuid - ${{ matrix.cfg.configuration }}
         if: steps.config.outcome == 'success'
         id: build
         run: cmake --build build
 
-      - name: Install CrossGuid - ${{ matrix.configuration }}
+      - name: Install CrossGuid - ${{ matrix.cfg.configuration }}
         if: steps.build.outcome == 'success'
-        run: cmake --install build --config "${{ matrix.configuration }}" --prefix "${{ matrix.configuration }}/install"
+        run: cmake --install build --config "${{ matrix.cfg.configuration }}" --prefix "${{ matrix.cfg.configuration }}/install"
 
-      - name: Test CrossGuid - ${{ matrix.configuration }}
+      - name: Test CrossGuid - ${{ matrix.cfg.configuration }}
         if: steps.build.outcome == 'success'
         run: cd build/test && ctest
