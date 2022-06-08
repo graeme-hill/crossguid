@@ -34,6 +34,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Configure CrossGuid
+        run: cmake -S . -B build
+
       - uses: novelrt/setup-cpp@v1
       - name: Build CrossGuid - ${{ matrix.configuration }}
         id: build
