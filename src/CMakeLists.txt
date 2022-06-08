@@ -1,5 +1,5 @@
 set(SOURCES
-        Guid.cpp)
+        guid.cpp)
 
 add_library(CrossGuid ${SOURCES})
 
