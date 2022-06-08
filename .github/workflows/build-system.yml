@@ -35,10 +35,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure CrossGuid
+        id: config
         run: cmake -S . -B build
 
       - uses: novelrt/setup-cpp@v1
       - name: Build CrossGuid - ${{ matrix.configuration }}
+        if: steps.config.outcome == 'success'
         id: build
         run: cmake build . --build-folder build
 
