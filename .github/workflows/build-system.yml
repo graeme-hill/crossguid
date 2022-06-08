@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug, Release]
-        os: [windows-2022, windows-2019, ubuntu-20.04, ubuntu-22.04, macos-10.15, macos-11]
+        os: [windows-2022, windows-2019, ubuntu-20.04, ubuntu-20.04, ubuntu-22.04, macos-10.15, macos-11]
         include:
         - os: ubuntu-20.04
           name: Ubuntu 20.04 (GCC 9)
@@ -34,8 +34,8 @@ jobs:
           cpp: clang++-10
         - os: ubuntu-22.04
           name: Ubuntu 22.04 (Clang 11)
-          c: clang-10
-          cpp: clang++-10
+          c: clang-11
+          cpp: clang++-11
         - os: windows-2019
           name: Windows Server 2019 (VS 2019)
           c: ''
@@ -60,7 +60,9 @@ jobs:
 
       - name: Change Compiler
         if: "!contains('', matrix.c)"
-        run: export CC=${{ matrix.c }} && export CXX=${{ matrix.cpp }}
+        run: |
+          export CC="${{ matrix.c }}"
+          export CXX="${{ matrix.cpp }}"
 
       - name: Configure CrossGuid
         id: config
