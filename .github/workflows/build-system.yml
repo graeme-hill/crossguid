@@ -46,7 +46,7 @@ jobs:
 
       - name: Install CrossGuid - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
-        run: cmake --install build --config "${{ matrix.configuration }}"
+        run: cmake --install build --config "${{ matrix.configuration }}" --prefix "${{ matrix.configuration }}/install"
 
       - name: Test CrossGuid - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
