@@ -42,7 +42,7 @@ jobs:
       - name: Build CrossGuid - ${{ matrix.configuration }}
         if: steps.config.outcome == 'success'
         id: build
-        run: cmake build . --build-folder build
+        run: cmake --build build
 
       - name: Install CrossGuid - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
