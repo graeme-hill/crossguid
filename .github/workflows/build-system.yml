@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cfg:
+        include:
           - { os: windows-2022, configuration: Debug, name: 'Windows Server 2022 (VS 2022)' }
           - { os: windows-2022, configuration: Release, name: 'Windows Server 2022 (VS 2022)' }
           - { os: windows-2019, configuration: Debug, name: 'Windows Server 2019 (VS 2019)' }
