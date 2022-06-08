@@ -13,47 +13,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug, Release]
-        os: [windows-2022, windows-2019, ubuntu-20.04, ubuntu-20.04, ubuntu-22.04, macos-10.15, macos-11]
-        include:
-        - os: ubuntu-20.04
-          name: Ubuntu 20.04 (GCC 9)
-          c: gcc-9
-          cpp: g++-9
-        - os: ubuntu-20.04
-          name: Ubuntu 20.04 (GCC 10)
-          c: gcc-10
-          cpp: g++-10
-        - os: ubuntu-22.04
-          name: Ubuntu 22.04 (GCC 11)
-          c: gcc-11
-          cpp: g++-11
-        - os: ubuntu-20.04
-          name: Ubuntu 20.04 (Clang 10)
-          c: clang-10
-          cpp: clang++-10
-        - os: ubuntu-22.04
-          name: Ubuntu 22.04 (Clang 11)
-          c: clang-11
-          cpp: clang++-11
-        - os: windows-2019
-          name: Windows Server 2019 (VS 2019)
-          c: ''
-          cpp: ''
-        - os: windows-2022
-          name: Windows Server 2022 (VS 2022)
-          c: ''
-          cpp: ''
-        - os: macos-10.15
-          name: macOS Catalina (Apple-Clang 12)
-          c: ''
-          cpp: ''
-        - os: macos-11
-          name: macOS Big Sur (Apple-Clang 13)
-          c: ''
-          cpp: ''
-        
-    
+        cfg:
+          - { os: windows-2022, configuration: Debug, name: 'Windows Server 2022 (VS 2022)' }
+          - { os: windows-2022, configuration: Release, name: 'Windows Server 2022 (VS 2022)' }
+          - { os: windows-2019, configuration: Debug, name: 'Windows Server 2019 (VS 2019)' }
+          - { os: windows-2019, configuration: Release, name: 'Windows Server 2019 (VS 2019)' }
+          - { os: macos-10.15, configuration: Debug, name: 'macOS Catalina (AppleClang 12)' }
+          - { os: macos-10.15, configuration: Release, name: 'macOS Catalina (AppleClang 12)' }
+          - { os: macos-11, configuration: Debug, name: 'macOS Big Sur (AppleClang 12)' }
+          - { os: macos-11, configuration: Release, name: 'macOS Big Sur (AppleClang 12)' }
+          - { os: ubuntu-22.04, configuration: Debug, name: 'Ubuntu 22.04 (GCC 11)' }
+          - { os: ubuntu-22.04, configuration: Release, name: 'Ubuntu 22.04 (GCC 11)' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'gcc-9' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'g++-9' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (Clang 10)', c: 'clang-10', cpp: 'clang++-10' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (Clang 10)', c: 'clang-10', cpp: 'clang++-10' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (Clang 11)', c: 'clang-11', cpp: 'clang++-11' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (Clang 11)', c: 'clang-11', cpp: 'clang++-11' }
+          
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
