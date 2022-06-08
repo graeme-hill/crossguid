@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  CI:
+    name: ${{ matrix.name }} - ${{ matrix.configuration }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+        os: [windows-latest, windows-2019, ubuntu-latest, macos-10.15]
+        include:
+        - os: ubuntu-latest
+          name: Ubuntu - Clang 10
+        - os: windows-2019
+          name: Windows - Visual Studio 2019
+        - os: windows-latest
+          name: Windows - Visual Studio 2022
+        - os: macos-10.15
+          name: macOS 10.15 - Apple-Clang 12
+        - os: macos-10.15
+          name: macOS 10.15 - Apple-Clang 12
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - uses: novelrt/setup-cpp@v1
+      - name: Build CrossGuid - ${{ matrix.configuration }}
+        id: build
+        run: cmake build . --build-folder build
+
+      - name: Install CrossGuid - ${{ matrix.configuration }}
+        if: steps.build.outcome == 'success'
+        run: cmake --install build --config "${{ matrix.configuration }}"
+
+      - name: Test CrossGuid - ${{ matrix.configuration }}
+        if: steps.build.outcome == 'success'
+        run: cd build/test && ctest
