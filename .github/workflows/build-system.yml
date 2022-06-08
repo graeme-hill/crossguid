@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Change Compiler
-        if: !contains('', matrix.c)
+        if: "!contains('', matrix.c)"
         run: export CC=${{ matrix.c }} && export CXX=${{ matrix.cpp }}
 
       - name: Configure CrossGuid
