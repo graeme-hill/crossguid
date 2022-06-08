@@ -20,11 +20,11 @@ jobs:
           - { os: windows-2019, configuration: Release, name: 'Windows Server 2019 (VS 2019)' }
           - { os: macos-10.15, configuration: Debug, name: 'macOS Catalina (AppleClang 12)' }
           - { os: macos-10.15, configuration: Release, name: 'macOS Catalina (AppleClang 12)' }
-          - { os: macos-11, configuration: Debug, name: 'macOS Big Sur (AppleClang 12)' }
-          - { os: macos-11, configuration: Release, name: 'macOS Big Sur (AppleClang 12)' }
+          - { os: macos-11, configuration: Debug, name: 'macOS Big Sur (AppleClang 13)' }
+          - { os: macos-11, configuration: Release, name: 'macOS Big Sur (AppleClang 13)' }
           - { os: ubuntu-22.04, configuration: Debug, name: 'Ubuntu 22.04 (GCC 11)' }
           - { os: ubuntu-22.04, configuration: Release, name: 'Ubuntu 22.04 (GCC 11)' }
-          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'gcc-9' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'g++-9' }
           - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'g++-9' }
           - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
           - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
@@ -37,14 +37,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Change Compiler
+      - name: Configure CrossGuid (w/ Compiler change)
+        id: config
         if: "!contains('', matrix.cfg.c)"
-        run: |
-          export CC="${{ matrix.cfg.c }}"
-          export CXX="${{ matrix.cfg.cpp }}"
+        run: CC="${{ matrix.cfg.c }}" CXX="${{ matrix.cfg.cpp }}" cmake -S . -B build
 
       - name: Configure CrossGuid
         id: config
+        if: "contains('', matrix.cfg.c)"
         run: cmake -S . -B build
 
       - uses: novelrt/setup-cpp@v1
