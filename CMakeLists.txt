@@ -9,6 +9,7 @@ project(CrossGuid
 		)
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 install(
 		EXPORT CrossGuid
