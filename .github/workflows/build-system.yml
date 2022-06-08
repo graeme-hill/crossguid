@@ -43,20 +43,20 @@ jobs:
         run: CC="${{ matrix.cfg.c }}" CXX="${{ matrix.cfg.cpp }}" cmake -S . -B build
 
       - name: Configure CrossGuid
-        id: config
+        id: config2
         if: "contains('', matrix.cfg.c)"
         run: cmake -S . -B build
 
       - uses: novelrt/setup-cpp@v1
       - name: Build CrossGuid - ${{ matrix.cfg.configuration }}
-        if: steps.config.outcome == 'success'
+        if: steps.config.outcome == 'success' || steps.config2.outcome == 'success'
         id: build
         run: cmake --build build --config ${{ matrix.cfg.configuration }}
 
       - name: Install CrossGuid - ${{ matrix.cfg.configuration }}
-        if: steps.build.outcome == 'success'
+        if: steps.build.outcome == 'success' || steps.config2.outcome == 'success'
         run: cmake --install build --config "${{ matrix.cfg.configuration }}" --prefix "${{ matrix.cfg.configuration }}/install"
 
       - name: Test CrossGuid - ${{ matrix.cfg.configuration }}
-        if: steps.build.outcome == 'success'
+        if: steps.build.outcome == 'success' || steps.config2.outcome == 'success'
         run: cd build/test && ctest
