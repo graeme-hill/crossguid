@@ -14,18 +14,21 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug, Release]
-        os: [windows-latest, windows-2019, ubuntu-latest, macos-10.15]
+        os: [windows-2022, windows-2019, ubuntu-20.04, ubuntu-22.04, macos-10.15, macos-11]
         include:
-        - os: ubuntu-latest
-          name: Ubuntu - Clang 10
+        - os: ubuntu-20.04
+          name: Ubuntu 20.04 (GCC 10)
+        - os: ubuntu-22.04
+          name: Ubuntu 22.04 (GCC 11)
         - os: windows-2019
-          name: Windows - Visual Studio 2019
-        - os: windows-latest
-          name: Windows - Visual Studio 2022
+          name: Windows Server 2019 (VS 2019)
+        - os: windows-2022
+          name: Windows Server 2022 (VS 2022)
         - os: macos-10.15
-          name: macOS 10.15 - Apple-Clang 12
-        - os: macos-10.15
-          name: macOS 10.15 - Apple-Clang 12
+          name: macOS Catalina (Apple-Clang 12)
+        - os: macos-11
+          name: macOS Big Sur (Apple-Clang 13)
+        
     
     steps:
       - name: Checkout Code
