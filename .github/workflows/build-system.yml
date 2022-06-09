@@ -1,0 +1,63 @@
+name: Continuous Integration
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  CI:
+    name: ${{ matrix.cfg.name }} - ${{ matrix.cfg.configuration }}
+    runs-on: ${{ matrix.cfg.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+          - { os: 'windows-2022', configuration: Debug, name: 'Windows Server 2022 (VS 2022)' }
+          - { os: windows-2022, configuration: Release, name: 'Windows Server 2022 (VS 2022)' }
+          - { os: windows-2019, configuration: Debug, name: 'Windows Server 2019 (VS 2019)' }
+          - { os: windows-2019, configuration: Release, name: 'Windows Server 2019 (VS 2019)' }
+          - { os: macos-10.15, configuration: Debug, name: 'macOS Catalina (AppleClang 12)' }
+          - { os: macos-10.15, configuration: Release, name: 'macOS Catalina (AppleClang 12)' }
+          - { os: macos-11, configuration: Debug, name: 'macOS Big Sur (AppleClang 13)' }
+          - { os: macos-11, configuration: Release, name: 'macOS Big Sur (AppleClang 13)' }
+          - { os: ubuntu-22.04, configuration: Debug, name: 'Ubuntu 22.04 (GCC 11)' }
+          - { os: ubuntu-22.04, configuration: Release, name: 'Ubuntu 22.04 (GCC 11)' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'g++-9' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 9)', c: 'gcc-9', cpp: 'g++-9' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (GCC 10)', c: 'gcc-10', cpp: 'g++-10' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (Clang 10)', c: 'clang-10', cpp: 'clang++-10' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (Clang 10)', c: 'clang-10', cpp: 'clang++-10' }
+          - { os: ubuntu-20.04, configuration: Debug, name: 'Ubuntu 20.04 (Clang 11)', c: 'clang-11', cpp: 'clang++-11' }
+          - { os: ubuntu-20.04, configuration: Release, name: 'Ubuntu 20.04 (Clang 11)', c: 'clang-11', cpp: 'clang++-11' }
+          
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Configure CrossGuid (w/ Compiler change)
+        id: config
+        if: "!contains('', matrix.cfg.c)"
+        run: CC="${{ matrix.cfg.c }}" CXX="${{ matrix.cfg.cpp }}" cmake -S . -B build
+
+      - name: Configure CrossGuid
+        id: config2
+        if: "contains('', matrix.cfg.c)"
+        run: cmake -S . -B build
+
+      - uses: novelrt/setup-cpp@v1
+      - name: Build CrossGuid - ${{ matrix.cfg.configuration }}
+        if: steps.config.outcome == 'success' || steps.config2.outcome == 'success'
+        id: build
+        run: cmake --build build --config ${{ matrix.cfg.configuration }}
+
+      - name: Install CrossGuid - ${{ matrix.cfg.configuration }}
+        if: steps.build.outcome == 'success' || steps.config2.outcome == 'success'
+        run: cmake --install build --config "${{ matrix.cfg.configuration }}" --prefix "${{ matrix.cfg.configuration }}/install"
+
+      - name: Test CrossGuid - ${{ matrix.cfg.configuration }}
+        if: steps.build.outcome == 'success' || steps.config2.outcome == 'success'
+        run: cd build/test && ctest
+        

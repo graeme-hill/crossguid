@@ -135,7 +135,7 @@ TEST(ErrorHandlingTest, GuidWithOneMissingValueShouldBeEmpty)
     xg::Guid empty;
     xg::Guid oneTooFew("16d1bd03-09a5-47d3-944b-5e326fd52d2");
     EXPECT_EQ(oneTooFew, empty);
-    EXPECT_FALSE(oneTooFew.isValid())
+    EXPECT_FALSE(oneTooFew.isValid());
 }
 
 TEST(ErrorHandlingTest, GuidWithTwoMissingValuesShouldBeEmpty)
@@ -143,7 +143,7 @@ TEST(ErrorHandlingTest, GuidWithTwoMissingValuesShouldBeEmpty)
     xg::Guid empty;
 	xg::Guid twoTooFew("7bcd757f-5b10-4f9b-af69-1a1f226f3b");
     EXPECT_EQ(twoTooFew, empty);
-    EXPECT_FALSE(twoTooFew.isValid())
+    EXPECT_FALSE(twoTooFew.isValid());
 }
 
 TEST(ErrorHandlingTest, GuidWithOneExtraValueShouldBeEmpty)
@@ -151,7 +151,7 @@ TEST(ErrorHandlingTest, GuidWithOneExtraValueShouldBeEmpty)
     xg::Guid empty;
     xg::Guid oneExtraValue("16d1bd03-09a5-47d3-944b-5e326fd52d27a");
     EXPECT_EQ(oneExtraValue, empty);
-    EXPECT_FALSE(oneExtraValue.isValid())
+    EXPECT_FALSE(oneExtraValue.isValid());
 }
 
 TEST(ErrorHandlingTest, GuidWithTwoExtraValuesShouldBeEmpty)
@@ -159,7 +159,7 @@ TEST(ErrorHandlingTest, GuidWithTwoExtraValuesShouldBeEmpty)
     xg::Guid empty;
 	xg::Guid twoExtraValues("7bcd757f-5b10-4f9b-af69-1a1f226f3beeff");
     EXPECT_EQ(twoExtraValues, empty);
-    EXPECT_FALSE(twoExtraValues.isValid())
+    EXPECT_FALSE(twoExtraValues.isValid());
 }
 
 TEST(ErrorHandlingTest, GuidWithBadStringShouldBeEmpty)
@@ -167,6 +167,6 @@ TEST(ErrorHandlingTest, GuidWithBadStringShouldBeEmpty)
     xg::Guid empty;
 	xg::Guid badString("!!bad-guid-string!!");
     EXPECT_EQ(badString, empty);
-    EXPECT_FALSE(badString.isValid())
+    EXPECT_FALSE(badString.isValid());
 }
 
