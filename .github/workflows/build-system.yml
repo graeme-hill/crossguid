@@ -60,3 +60,4 @@ jobs:
       - name: Test CrossGuid - ${{ matrix.cfg.configuration }}
         if: steps.build.outcome == 'success' || steps.config2.outcome == 'success'
         run: cd build/test && ctest
+        
