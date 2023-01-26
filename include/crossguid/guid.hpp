@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include <jni.h>
 #endif
 
+#include <cstdint>
 #include <functional>
 #include <iostream>
 #include <array>
