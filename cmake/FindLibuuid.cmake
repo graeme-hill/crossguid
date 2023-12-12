@@ -15,7 +15,7 @@ find_library(LIBUUID_LIBRARY
 )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LibUUID
+find_package_handle_standard_args(Libuuid
 	FOUND_VAR
 		LIBUUID_FOUND
 	REQUIRED_VARS
